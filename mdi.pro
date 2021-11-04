@@ -2,10 +2,12 @@ QT += widgets
 requires(qtConfig(filedialog))
 
 HEADERS       = mainwindow.h \
-                mdichild.h
+                mdichild.h \
+                muscle_encoding.h
 SOURCES       = main.cpp \
                 mainwindow.cpp \
-                mdichild.cpp
+                mdichild.cpp \
+                muscle_encoding.cpp
 RESOURCES     = mdi.qrc
 
 # install
