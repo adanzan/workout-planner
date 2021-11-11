@@ -51,12 +51,30 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QFile>
 
 #include "mainwindow.h"
+
+#include "iostream"
+
+using namespace std;
+
+// The file path of the list of equipments
+const QString EQUIPMENT_LIST_FILE_PATH = ":/data/exercise_list.tsv";
 
 int main(int argc, char *argv[])
 {
     Q_INIT_RESOURCE(mdi);
+
+    QFile fileEquipmentList(EQUIPMENT_LIST_FILE_PATH);
+    if (!fileEquipmentList.open(QIODevice::ReadOnly))
+        cerr << ;
+
+    else ()
+
+
+
+
 
     QApplication app(argc, argv);
     QCoreApplication::setApplicationName("MDI Example");
