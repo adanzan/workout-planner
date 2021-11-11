@@ -53,8 +53,7 @@
 
 #include <QTextEdit>
 
-class MdiChild : public QTextEdit
-{
+class MdiChild : public QWidget {
     Q_OBJECT
 
 public:

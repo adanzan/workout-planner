@@ -213,26 +213,6 @@ void MainWindow::saveAs()
     }
 }
 
-#ifndef QT_NO_CLIPBOARD
-void MainWindow::cut()
-{
-    if (activeMdiChild())
-        activeMdiChild()->cut();
-}
-
-void MainWindow::copy()
-{
-    if (activeMdiChild())
-        activeMdiChild()->copy();
-}
-
-void MainWindow::paste()
-{
-    if (activeMdiChild())
-        activeMdiChild()->paste();
-}
-#endif
-
 void MainWindow::about()
 {
    QMessageBox::about(this, tr("About MDI"),
@@ -245,9 +225,6 @@ void MainWindow::updateMenus()
     bool hasMdiChild = (activeMdiChild() != nullptr);
     saveAct->setEnabled(hasMdiChild);
     saveAsAct->setEnabled(hasMdiChild);
-#ifndef QT_NO_CLIPBOARD
-    pasteAct->setEnabled(hasMdiChild);
-#endif
     closeAct->setEnabled(hasMdiChild);
     closeAllAct->setEnabled(hasMdiChild);
     tileAct->setEnabled(hasMdiChild);
@@ -255,13 +232,6 @@ void MainWindow::updateMenus()
     nextAct->setEnabled(hasMdiChild);
     previousAct->setEnabled(hasMdiChild);
     windowMenuSeparatorAct->setVisible(hasMdiChild);
-
-#ifndef QT_NO_CLIPBOARD
-    bool hasSelection = (activeMdiChild() &&
-                         activeMdiChild()->textCursor().hasSelection());
-    cutAct->setEnabled(hasSelection);
-    copyAct->setEnabled(hasSelection);
-#endif
 }
 
 void MainWindow::updateWindowMenu()
@@ -304,11 +274,6 @@ MdiChild *MainWindow::createMdiChild()
 {
     MdiChild *child = new MdiChild;
     mdiArea->addSubWindow(child);
-
-#ifndef QT_NO_CLIPBOARD
-    connect(child, &QTextEdit::copyAvailable, cutAct, &QAction::setEnabled);
-    connect(child, &QTextEdit::copyAvailable, copyAct, &QAction::setEnabled);
-#endif
 
     return child;
 }
@@ -374,38 +339,6 @@ void MainWindow::createActions()
     exitAct->setStatusTip(tr("Exit the application"));
     fileMenu->addAction(exitAct);
 //! [0]
-
-#ifndef QT_NO_CLIPBOARD
-    QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
-    QToolBar *editToolBar = addToolBar(tr("Edit"));
-
-    const QIcon cutIcon = QIcon::fromTheme("edit-cut", QIcon(":/images/cut.png"));
-    cutAct = new QAction(cutIcon, tr("Cu&t"), this);
-    cutAct->setShortcuts(QKeySequence::Cut);
-    cutAct->setStatusTip(tr("Cut the current selection's contents to the "
-                            "clipboard"));
-    connect(cutAct, &QAction::triggered, this, &MainWindow::cut);
-    editMenu->addAction(cutAct);
-    editToolBar->addAction(cutAct);
-
-    const QIcon copyIcon = QIcon::fromTheme("edit-copy", QIcon(":/images/copy.png"));
-    copyAct = new QAction(copyIcon, tr("&Copy"), this);
-    copyAct->setShortcuts(QKeySequence::Copy);
-    copyAct->setStatusTip(tr("Copy the current selection's contents to the "
-                             "clipboard"));
-    connect(copyAct, &QAction::triggered, this, &MainWindow::copy);
-    editMenu->addAction(copyAct);
-    editToolBar->addAction(copyAct);
-
-    const QIcon pasteIcon = QIcon::fromTheme("edit-paste", QIcon(":/images/paste.png"));
-    pasteAct = new QAction(pasteIcon, tr("&Paste"), this);
-    pasteAct->setShortcuts(QKeySequence::Paste);
-    pasteAct->setStatusTip(tr("Paste the clipboard's contents into the current "
-                              "selection"));
-    connect(pasteAct, &QAction::triggered, this, &MainWindow::paste);
-    editMenu->addAction(pasteAct);
-    editToolBar->addAction(pasteAct);
-#endif
 
     windowMenu = menuBar()->addMenu(tr("&Window"));
     connect(windowMenu, &QMenu::aboutToShow, this, &MainWindow::updateWindowMenu);

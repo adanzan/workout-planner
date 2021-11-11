@@ -56,6 +56,11 @@ MdiChild::MdiChild()
 {
     setAttribute(Qt::WA_DeleteOnClose);
     isUntitled = true;
+    // Setting the grid layout
+    QHBoxLayout *main_layout = new QHBoxLayout();
+    setLayout(main_layout);
+    // Add layout stuff here
+
 }
 
 void MdiChild::newFile()
@@ -66,8 +71,6 @@ void MdiChild::newFile()
     curFile = tr("document%1.txt").arg(sequenceNumber++);
     setWindowTitle(curFile + "[*]");
 
-    connect(document(), &QTextDocument::contentsChanged,
-            this, &MdiChild::documentWasModified);
 }
 
 bool MdiChild::loadFile(const QString &fileName)
@@ -83,13 +86,10 @@ bool MdiChild::loadFile(const QString &fileName)
 
     QTextStream in(&file);
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
-    setPlainText(in.readAll());
+    // Read file here
     QGuiApplication::restoreOverrideCursor();
 
     setCurrentFile(fileName);
-
-    connect(document(), &QTextDocument::contentsChanged,
-            this, &MdiChild::documentWasModified);
 
     return true;
 }
@@ -121,7 +121,7 @@ bool MdiChild::saveFile(const QString &fileName)
     QSaveFile file(fileName);
     if (file.open(QFile::WriteOnly | QFile::Text)) {
         QTextStream out(&file);
-        out << toPlainText();
+        // Output file
         if (!file.commit()) {
             errorMessage = tr("Cannot write file %1:\n%2.")
                            .arg(QDir::toNativeSeparators(fileName), file.errorString());
@@ -157,12 +157,12 @@ void MdiChild::closeEvent(QCloseEvent *event)
 
 void MdiChild::documentWasModified()
 {
-    setWindowModified(document()->isModified());
 }
 
 bool MdiChild::maybeSave()
 {
-    if (!document()->isModified())
+    // If something has been modified
+    if (false)
         return true;
     const QMessageBox::StandardButton ret
             = QMessageBox::warning(this, tr("MDI"),
@@ -186,7 +186,8 @@ void MdiChild::setCurrentFile(const QString &fileName)
 {
     curFile = QFileInfo(fileName).canonicalFilePath();
     isUntitled = false;
-    document()->setModified(false);
+
+//  document()->setModified(false);
     setWindowModified(false);
     setWindowTitle(userFriendlyCurrentFile() + "[*]");
 }

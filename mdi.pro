@@ -3,13 +3,18 @@ requires(qtConfig(filedialog))
 
 HEADERS       = mainwindow.h \
                 mdichild.h \
-                muscle_encoding.h
+                muscleencoding.h
 SOURCES       = main.cpp \
                 mainwindow.cpp \
                 mdichild.cpp \
-                muscle_encoding.cpp
+                muscleencoding.cpp
 RESOURCES     = mdi.qrc
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/widgets/mainwindows/mdi
 INSTALLS += target
+
+DISTFILES += \
+    data/CSCI0318 - Workout Project - Sheet1.tsv \
+    data/CSCI0318 - Workout Project - Sheet1.txt \
+    data/CSCI0318 - Workout Project - Sheet1.txt

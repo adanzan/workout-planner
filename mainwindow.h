@@ -80,11 +80,6 @@ private slots:
     void saveAs();
     void updateRecentFileActions();
     void openRecentFile();
-#ifndef QT_NO_CLIPBOARD
-    void cut();
-    void copy();
-    void paste();
-#endif
     void about();
     void updateMenus();
     void updateWindowMenu();
@@ -114,11 +109,6 @@ private:
     QAction *recentFileActs[MaxRecentFiles];
     QAction *recentFileSeparator;
     QAction *recentFileSubMenuAct;
-#ifndef QT_NO_CLIPBOARD
-    QAction *cutAct;
-    QAction *copyAct;
-    QAction *pasteAct;
-#endif
     QAction *closeAct;
     QAction *closeAllAct;
     QAction *tileAct;
