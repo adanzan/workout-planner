@@ -1,3 +1,6 @@
+//CS318
+//Workout Project
+//Created by Danzan and will
 /****************************************************************************
 **
 ** Copyright (C) 2016 The Qt Company Ltd.
