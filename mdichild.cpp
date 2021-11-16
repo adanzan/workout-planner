@@ -51,9 +51,12 @@
 #include <QtWidgets>
 
 #include "mdichild.h"
+#include "muscleencoding.h"
 
-MdiChild::MdiChild()
-{
+// 1 = Primary
+// 2 = Secondary
+
+MdiChild::MdiChild() {
     setAttribute(Qt::WA_DeleteOnClose);
     isUntitled = true;
     // Setting the HBox layout
@@ -61,6 +64,54 @@ MdiChild::MdiChild()
     setLayout(main_layout);
     // Add layout stuff here
 
+
+     exerciseList = new QTreeWidget();
+
+     main_layout->addWidget(exerciseList);
+
+     // Setting the column count to 3
+     exerciseList->setColumnCount(3);
+     // Sets the headers
+     exerciseList->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
+
+     // Code the list into the QStringList first then do these
+
+     // Nested for loops because there is also one for exerciseQquipment
+
+     QTreeWidgetItem *exercise = new QTreeWidgetItem(exerciseList);
+     // Exercise name
+     exercise->setText(0, tr("Bench Press"));
+     //Primary Muscle Group
+     exercise->setText(1, tr("Chest"));
+     //Secondary Muscle Group
+     exercise->setText(2, tr("Biceps, Triceps"));
+
+     // Takes an index number and puts it into the data
+        // Can have them store a value behind the scenes to index it later
+
+     // Where to put it in and what to put in
+     // Puts a data in column 0
+     exercise->setData(0, Qt::UserRole, MuscleEncoding::Chest);
+     exercise->setData(0, Qt::UserRole + 1, MuscleEncoding::Biceps | MuscleEncoding::Triceps);
+
+
+
+     connect(exerciseList, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
+
+     // Doing a for loop here and putting in the exercises each iteration
+     QTreeWidgetItem *exerciseEquipment = new QTreeWidgetItem(exercise);
+     exerciseEquipment->setText(0, tr("Barbell & Flat Bench"));
+
+    //TODO: In the main one, we don't need to do this, we only need one.
+     exerciseEquipment = new QTreeWidgetItem(exercise);
+     exerciseEquipment->setText(0, tr("Dumbbells & Adjustable Bench"));
+
+}
+
+// How we can react to the muscle being clicked
+    // Change this to selected
+void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
+    qDebug() << item->data(0, Qt::UserRole);
 }
 
 void MdiChild::newFile()

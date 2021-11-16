@@ -51,7 +51,7 @@
 #ifndef MDICHILD_H
 #define MDICHILD_H
 
-#include <QTextEdit>
+#include <QTreeWidget>
 
 class MdiChild : public QWidget {
     Q_OBJECT
@@ -72,6 +72,8 @@ protected:
 
 private slots:
     void documentWasModified();
+    void exerciseClicked(QTreeWidgetItem *item, int column);
+
 
 private:
     bool maybeSave();
@@ -80,6 +82,8 @@ private:
 
     QString curFile;
     bool isUntitled;
+
+    QTreeWidget *exerciseList;
 };
 
 #endif

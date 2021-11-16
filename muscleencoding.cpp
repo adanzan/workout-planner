@@ -7,7 +7,7 @@
 int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
     // Initialises a 0 so that it could detect if nothing was detected
     int coding = 0;
-    for (QString muscle : muscleGroups) {
+    for (const QString &muscle : muscleGroups) {
         if (muscle == "Front Deltoids")
             coding |= Front_Deltoids;
         else if (muscle == "Side Deltoids")
@@ -68,15 +68,31 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
 
 // Converts muscle encodings to a QStringList of muscles
 // TODO: Code the muscle encodings in
-// Q: Figure out how to do the for loop
 QStringList MuscleEncoding::decodeMuscleGroup(int coding){
+    auto hasAll = [coding](int bits)->bool {
+       return ((coding & bits) == bits);
+    };
+    auto hasSome = [coding](int bits)->bool {
+       return (coding & bits);
+    };
+
     QStringList muscles;
-    int code;
-//    for (bool code : coding){
-        //What do I do here?
-        if ( code == Front_Deltoids){
-            muscles << "Front Deltoids";
+
+    if (hasSome(Deltoids)) {
+        if (hasAll(Deltoids)) muscles << "Deltoids";
+        else {
+            if (hasAll(Front_Deltoids)) muscles << "Front Deltoids";
+            if (hasAll(Side_Deltoids)) muscles << "Side Deltoids";
+            if (hasAll(Rear_Deltoids)) muscles << "Rear Deltoids";
         }
-//    }
+    }
+
+    if (hasSome(Chest)) {
+        if (hasAll(Chest)) muscles << "Chest";
+        else {
+
+        }
+    }
+
     return muscles;
 }
