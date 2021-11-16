@@ -2,9 +2,11 @@ QT += widgets
 requires(qtConfig(filedialog))
 
 HEADERS       = mainwindow.h \
+                exercise.h \
                 mdichild.h \
                 muscleencoding.h
 SOURCES       = main.cpp \
+                exercise.cpp \
                 mainwindow.cpp \
                 mdichild.cpp \
                 muscleencoding.cpp

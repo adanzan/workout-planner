@@ -67,8 +67,16 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
 }
 
 // Converts muscle encodings to a QStringList of muscles
-// TODO: Code it in
+// TODO: Code the muscle encodings in
+// Q: Figure out how to do the for loop
 QStringList MuscleEncoding::decodeMuscleGroup(int coding){
     QStringList muscles;
-
+    int code;
+//    for (bool code : coding){
+        //What do I do here?
+        if ( code == Front_Deltoids){
+            muscles << "Front Deltoids";
+        }
+//    }
+    return muscles;
 }

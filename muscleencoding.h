@@ -3,8 +3,7 @@
 
 class QStringList;
 
-class MuscleEncoding
-{
+class MuscleEncoding {
 public:
     enum muscles {
         Front_Deltoids = 1 << 0,

@@ -56,7 +56,7 @@ MdiChild::MdiChild()
 {
     setAttribute(Qt::WA_DeleteOnClose);
     isUntitled = true;
-    // Setting the grid layout
+    // Setting the HBox layout
     QHBoxLayout *main_layout = new QHBoxLayout();
     setLayout(main_layout);
     // Add layout stuff here
