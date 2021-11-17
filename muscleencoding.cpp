@@ -39,7 +39,7 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
         else if (muscle == "Lower Abs")
             coding |= Lower_Abs;
         else if (muscle == "Obliqueus")
-            coding |= Obliqueus;
+            coding |= Obliques;
         else if (muscle == "Glutes")
             coding |= Glutes;
         else if (muscle == "Quads")

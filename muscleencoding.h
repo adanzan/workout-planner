@@ -21,7 +21,7 @@ public:
         Forearms = 1 << 12,
         Upper_Abs = 1<< 13,
         Lower_Abs = 1 << 14,
-        Obliqueus = 1 << 15,
+        Obliques = 1 << 15,
         Glutes = 1 << 16,
         Quads = 1 << 18,
         Calves = 1 << 19,
@@ -31,7 +31,7 @@ public:
 
         Deltoids = Front_Deltoids | Side_Deltoids | Rear_Deltoids,
         Chest = Upper_Chest | Middle_Chest | Lower_Chest,
-        Abs = Upper_Abs | Lower_Abs | Obliqueus,
+        Abs = Upper_Abs | Lower_Abs | Obliques,
         Hips = Hip_Abductor | Hip_Adductor
 
         // If we see front, side and rear, just spit out deltoids
