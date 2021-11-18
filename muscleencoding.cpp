@@ -1,7 +1,7 @@
 #include "muscleencoding.h"
 #include <QStringList>
 
-// Utility class, used to convert muscle encodings to
+// Utility class, used to convert muscle encodings to strings and vice versa
 
 // Converts a QStringList of Muscle Groups to encodings
 int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
@@ -20,10 +20,8 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
             coding |= Middle_Chest;
         else if (muscle == "Lower Chest")
             coding |= Lower_Chest;
-        else if (muscle == "Traps")
-            coding |= Traps;
-        else if (muscle == "Lats")
-            coding |= Lats;
+        else if (muscle == "Upper_Traps")
+            coding |= Upper_Traps;
         else if (muscle == "Upper Back")
             coding |= Upper_Back;
         else if (muscle == "Lower Back")
@@ -38,8 +36,8 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
             coding |= Upper_Abs;
         else if (muscle == "Lower Abs")
             coding |= Lower_Abs;
-        else if (muscle == "Obliqueus")
-            coding |= Obliqueus;
+        else if (muscle == "Obliques")
+            coding |= Obliques;
         else if (muscle == "Glutes")
             coding |= Glutes;
         else if (muscle == "Quads")
@@ -67,7 +65,6 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
 }
 
 // Converts muscle encodings to a QStringList of muscles
-// TODO: Code the muscle encodings in
 QStringList MuscleEncoding::decodeMuscleGroup(int coding){
     auto hasAll = [coding](int bits)->bool {
        return ((coding & bits) == bits);
@@ -77,6 +74,20 @@ QStringList MuscleEncoding::decodeMuscleGroup(int coding){
     };
 
     QStringList muscles;
+
+    if (hasAll(Upper_Traps)) muscles << "Upper Traps";
+    if (hasAll(Upper_Back)) muscles << "Upper Back";
+    if (hasAll(Lower_Back)) muscles << "Lower Back";
+
+    if (hasAll(Biceps)) muscles << "Biceps";
+    if (hasAll(Triceps)) muscles << "Triceps";
+    if (hasAll(Forearms)) muscles << "Forearms";
+
+    if (hasAll(Glutes)) muscles << "Glutes";
+    if (hasAll(Quads)) muscles << "Quads";
+    if (hasAll(Calves)) muscles << "Calves";
+    if (hasAll(Hamstrings)) muscles << "Hamstrings";
+
 
     if (hasSome(Deltoids)) {
         if (hasAll(Deltoids)) muscles << "Deltoids";
@@ -90,7 +101,26 @@ QStringList MuscleEncoding::decodeMuscleGroup(int coding){
     if (hasSome(Chest)) {
         if (hasAll(Chest)) muscles << "Chest";
         else {
+            if (hasAll(Upper_Chest)) muscles << "Upper Chest";
+            if (hasAll(Middle_Chest)) muscles << "Middle Chest";
+            if (hasAll(Lower_Chest)) muscles << "Lower Chest";
+        }
+    }
 
+    if (hasSome(Abs)) {
+        if (hasAll(Abs)) muscles << "Abs";
+        else {
+            if (hasAll(Upper_Abs)) muscles << "Upper Abs";
+            if (hasAll(Lower_Abs)) muscles << "Lower Abs";
+            if (hasAll(Obliques)) muscles << "Obliques";
+        }
+    }
+
+    if (hasSome(Hips)) {
+        if (hasAll(Hips)) muscles << "Hips";
+        else {
+            if (hasAll(Hip_Abductor)) muscles << "Hip Abductor";
+            if (hasAll(Hip_Adductor)) muscles << "Hip Adductor";
         }
     }
 
