@@ -25,13 +25,13 @@ public:
         Quads = 1 << 16,
         Calves = 1 << 17,
         Hamstrings = 1 << 18,
-        Hip_Abductor = 1 << 19,
-        Hip_Adductor = 1 << 20,
+        Hip_Abductors = 1 << 19,
+        Hip_Adductors = 1 << 20,
 
         Deltoids = Front_Deltoids | Side_Deltoids | Rear_Deltoids,
         Chest = Upper_Chest | Middle_Chest | Lower_Chest,
         Abs = Upper_Abs | Lower_Abs | Obliques,
-        Hips = Hip_Abductor | Hip_Adductor
+        Hips = Hip_Abductors | Hip_Adductors
 
 
         // If we see front, side and rear, just spit out deltoids
@@ -39,7 +39,7 @@ public:
     };
     // Takes in a QStringList and returns an int that has the encoding of the muscle groups
     static int encodeMuscleGroup(const QStringList &muscleGroups);
-
+    // Takes in an int and returns a QStringList of muscles worked
     static QStringList decodeMuscleGroup(int coding);
 };
 

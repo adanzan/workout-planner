@@ -1,4 +1,3 @@
-Exercise	Primary Muscle	Secondary Muscle	Equipment
 Bench Press	Chest	Triceps, Shoulders	Bench Press, Squat Rack & Bench
 Decline Bench Press	Lower Chest	Triceps, Shoulders	Bench Press, Squat Rack & Adjustable Bench
 Incline Bench Press	Upper Chest	Triceps, Shoulders	Bench Press, Squat Rack & Adjustable Bench
@@ -8,9 +7,9 @@ Shoulder Press	Shoulders	Triceps, Upper Chest, Traps	Bench Press, Barbell, Squat
 Rows	Upper Back	Lower Back, Triceps, Biceps	Bench Press, Barbell, Squat Rack
 Deadlifts	Hamstrings	Glutes, Lower Back	Bench Press, Barbell, Squat Rack
 Romanian Deadlift	Hamstrings	Glutes, Lower Back	Bench Press, Barbell, Squat Rack, Dumbbells
-Front Lat Pulldown	Lats	Biceps, Triceps	Lat Pulldown Machine
-Pull-Up (Pronated)	Lats	Upper Back, Biceps	Pull-Up Bar
-Chin-Up (Supinated)	Biceps	Lats, Upper Back	Pull-Up Bar
+Front Lat Pulldown	Upper Back	Biceps, Triceps	Lat Pulldown Machine
+Pull-Up (Pronated)	Upper Back	Biceps	Pull-Up Bar
+Chin-Up (Supinated)	Upper Back	Biceps	Pull-Up Bar
 Tricep Pushdown	Triceps		Cable Machine
 Skullcrusher	Triceps		Dumbbells, Barbell, Curl Bars
 Curls	Biceps		Dumbbells, Cable Machine, Curl Bars
@@ -37,7 +36,7 @@ DB One Arm Row	Triceps	Lower Back, Upper Back, Biceps	Dumbbells
 Goblet Squats	Glutes	Quads, Hamstrings	Dumbbells
 KB Swing	Glutes	Hamstrings, Lower Back, Quads	Kettlebells
 Reverse Curls	Forearms	Biceps	Dumbbells, Curl Bar, Barbell
-Face Pulls	Rear Deltiods	Biceps	Cable Machine
+Face Pulls	Rear Deltoids	Biceps	Cable Machine
 Dips	Lower Chest	Triceps	Dip Bar
 Wrist Flexion	Forearms		Dumbbells, Curl Bar, Barbell
 Wrist Extension	Forearms		Dumbbells, Curl Bar, Barbell

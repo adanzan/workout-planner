@@ -12,7 +12,7 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
             coding |= Front_Deltoids;
         else if (muscle == "Side Deltoids")
             coding |= Side_Deltoids;
-        else if (muscle == "Rear Deltiods")
+        else if (muscle == "Rear Deltoids")
             coding |= Rear_Deltoids;
         else if (muscle == "Upper Chest")
             coding |= Upper_Chest;
@@ -46,13 +46,13 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
             coding |= Calves;
         else if (muscle == "Hamstrings")
             coding |= Hamstrings;
-        else if (muscle == "Hip Abductor")
-            coding |= Hip_Abductor;
-        else if (muscle == "Hip Adductor")
-            coding |= Hip_Adductor;
+        else if (muscle == "Hip Abductors")
+            coding |= Hip_Abductors;
+        else if (muscle == "Hip Adductors")
+            coding |= Hip_Adductors;
 
         // Groups of muscles are bundled together
-        else if (muscle == "Deltoids" || muscle == "Shoulder")
+        else if (muscle == "Deltoids" || muscle == "Shoulders")
             coding |= Deltoids;
         else if (muscle == "Chest")
             coding |= Chest;
@@ -118,8 +118,8 @@ QStringList MuscleEncoding::decodeMuscleGroup(int coding){
     if (hasSome(Hips)) {
         if (hasAll(Hips)) muscles << "Hips";
         else {
-            if (hasAll(Hip_Abductor)) muscles << "Hip Abductor";
-            if (hasAll(Hip_Adductor)) muscles << "Hip Adductor";
+            if (hasAll(Hip_Abductors)) muscles << "Hip Abductors";
+            if (hasAll(Hip_Adductors)) muscles << "Hip Adductors";
         }
     }
 

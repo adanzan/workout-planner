@@ -11,8 +11,9 @@ private:
 public:
     Exercise();
     QString name;
-    QStringList equipment;
     quint64 primary, secondary;
+    QStringList equipment;
+
 
     // TODO: Make this private later
     static std::list<Exercise> exerciseList;

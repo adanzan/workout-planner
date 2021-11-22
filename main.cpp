@@ -7,6 +7,7 @@
 #include <QCommandLineOption>
 #include <QTreeWidget>
 
+#include "exercise.h"
 #include "mainwindow.h"
 
 #include "iostream"
@@ -27,6 +28,9 @@ int main(int argc, char *argv[]) {
     parser.addVersionOption();
     parser.addPositionalArgument("file", "The file to open.");
     parser.process(app);
+
+    Exercise::readExerciseList();
+
 
     MainWindow mainWin;
     const QStringList posArgs = parser.positionalArguments();
