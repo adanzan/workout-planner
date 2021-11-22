@@ -1,15 +1,19 @@
-QT += widgets
+QT += widgets xml
 requires(qtConfig(filedialog))
 
 HEADERS       = mainwindow.h \
                 exercise.h \
                 mdichild.h \
-                muscleencoding.h
+                muscleencoding.h \
+                musclemap.h \
+                qgraphicsmusclegroup.h
 SOURCES       = main.cpp \
                 exercise.cpp \
                 mainwindow.cpp \
                 mdichild.cpp \
-                muscleencoding.cpp
+                muscleencoding.cpp \
+                musclemap.cpp \
+                qgraphicsmusclegroup.cpp
 RESOURCES     = mdi.qrc
 
 # install
