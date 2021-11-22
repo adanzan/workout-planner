@@ -7,5 +7,6 @@
         <file>images/paste.png</file>
         <file>images/save.png</file>
         <file>data/exercise_list.tsv</file>
+        <file>Muscles-simplified.svg</file>
     </qresource>
 </RCC>
