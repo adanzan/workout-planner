@@ -12,7 +12,13 @@
 
 using namespace std;
 
-Exercise::Exercise(){ }
+// Constructor method for the exercise class
+Exercise::Exercise(QString name, quint64 primary, quint64 secondary, QStringList equipmentList) {
+    _name = name;
+    _primary = primary;
+    _secondary = secondary;
+    _equipmentList = equipmentList;
+}
 
 void Exercise::readExerciseList(){
     // The file path of the list of exercises
@@ -38,20 +44,16 @@ void Exercise::readExerciseList(){
         // Splits the elements by tab
         splitLine = line.split("\t");
         if (splitLine.isEmpty()) continue;
-
         // The name of the exercise
         QString name = splitLine.at(0);
-
         // The coding of the primary muscle worked
         quint64 primary = MuscleEncoding::encodeMuscleGroup(QStringList(splitLine.at(1)));
-
         // The coding of the secondary muscle groups worked, created by splitting by comma
         quint64 secondary = MuscleEncoding::encodeMuscleGroup(QStringList(splitLine.at(2).split(", ")));
-
         // The list of equipments required to perform the exercise
         QStringList equipmentList = splitLine.at(3).split(", ");
-
-//        exerciseList.insert(name, primary, secondary, equipmentList);
+        // Pushes the exercise onto the exerciseList file
+        exerciseList.push_back(Exercise(name, primary, secondary, equipmentList));
     }
 
 }
