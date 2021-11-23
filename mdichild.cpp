@@ -52,6 +52,11 @@
 
 #include "mdichild.h"
 #include "muscleencoding.h"
+#include "exercise.h"
+
+#include <list>
+
+using namespace std;
 
 // 1 = Primary
 // 2 = Secondary
@@ -65,51 +70,63 @@ MdiChild::MdiChild() {
     // Add layout stuff here
 
 
-     exerciseList = new QTreeWidget();
+    exerciseTreeWidget = new QTreeWidget();
 
-     main_layout->addWidget(exerciseList);
+    main_layout->addWidget(exerciseTreeWidget);
 
-     // Setting the column count to 3
-     exerciseList->setColumnCount(3);
-     // Sets the headers
-     exerciseList->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
+    // Sets up the tree widget
+    exerciseTreeWidget->setColumnCount(3);
+    exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
 
-     // Code the list into the QStringList first then do these
+    // Code the list into the QStringList first then do these
 
-     // Nested for loops because there is also one for exerciseQquipment
+    // Nested for loops because there is also one for exerciseQquipment
 
-     QTreeWidgetItem *exercise = new QTreeWidgetItem(exerciseList);
-     // Exercise name
-     exercise->setText(0, tr("Bench Press"));
-     //Primary Muscle Group
-     exercise->setText(1, tr("Chest"));
-     //Secondary Muscle Group
-     exercise->setText(2, tr("Biceps, Triceps"));
+    while (!Exercise::exerciseList.empty()) {
 
-     // Takes an index number and puts it into the data
+        QTreeWidgetItem *exerciseItem = new QTreeWidgetItem(exerciseTreeWidget);
+
+        Exercise poppedExercise = Exercise::exerciseList.front();
+
+//        qDebug() << poppedExercise._name;
+
+        Exercise::exerciseList.pop_front();
+        if (Exercise::exerciseList.empty()) break;
+
+//        qDebug() << Exercise::exerciseList.front()._name;
+
+        // Exercise name
+        exerciseItem->setText(0, poppedExercise._name);
+        //Primary Muscle Group
+        exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(poppedExercise._primary).at(0));
+        //Secondary Muscle Group
+        exerciseItem->setText(2, tr("Biceps, Triceps"));
+
+        // Takes an index number and puts it into the data
         // Can have them store a value behind the scenes to index it later
 
-     // Where to put it in and what to put in
-     // Puts a data in column 0
-     exercise->setData(0, Qt::UserRole, MuscleEncoding::Chest);
-     exercise->setData(0, Qt::UserRole + 1, MuscleEncoding::Biceps | MuscleEncoding::Triceps);
+        // Where to put it in and what to put in
+        // Puts a data in column 0
+        exerciseItem->setData(0, Qt::UserRole, MuscleEncoding::Chest);
+        exerciseItem->setData(0, Qt::UserRole + 1, MuscleEncoding::Biceps | MuscleEncoding::Triceps);
 
 
+        connect(exerciseTreeWidget, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
 
-     connect(exerciseList, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
+        // Doing a for loop here and putting in the exercises each iteration
+        //for () {
+        QTreeWidgetItem *exerciseItemEquipment = new QTreeWidgetItem(exerciseItem);
+        exerciseItemEquipment->setText(0, tr("Barbell & Flat Bench"));
 
-     // Doing a for loop here and putting in the exercises each iteration
-     QTreeWidgetItem *exerciseEquipment = new QTreeWidgetItem(exercise);
-     exerciseEquipment->setText(0, tr("Barbell & Flat Bench"));
+        //        //TODO: In the main one, we don't need to do this, we only need one.
+        //         exerciseEquipment = new QTreeWidgetItem(exerciseItem);
+        //         exerciseEquipment->setText(0, tr("Dumbbells & Adjustable Bench"));
 
-    //TODO: In the main one, we don't need to do this, we only need one.
-     exerciseEquipment = new QTreeWidgetItem(exercise);
-     exerciseEquipment->setText(0, tr("Dumbbells & Adjustable Bench"));
-
+    }
 }
 
 // How we can react to the muscle being clicked
-    // Change this to selected
+// Change this to selected
 void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
     qDebug() << item->data(0, Qt::UserRole);
 }
@@ -175,11 +192,11 @@ bool MdiChild::saveFile(const QString &fileName)
         // Output file
         if (!file.commit()) {
             errorMessage = tr("Cannot write file %1:\n%2.")
-                           .arg(QDir::toNativeSeparators(fileName), file.errorString());
+                    .arg(QDir::toNativeSeparators(fileName), file.errorString());
         }
     } else {
         errorMessage = tr("Cannot open file %1 for writing:\n%2.")
-                       .arg(QDir::toNativeSeparators(fileName), file.errorString());
+                .arg(QDir::toNativeSeparators(fileName), file.errorString());
     }
     QGuiApplication::restoreOverrideCursor();
 
@@ -238,7 +255,7 @@ void MdiChild::setCurrentFile(const QString &fileName)
     curFile = QFileInfo(fileName).canonicalFilePath();
     isUntitled = false;
 
-//  document()->setModified(false);
+    //  document()->setModified(false);
     setWindowModified(false);
     setWindowTitle(userFriendlyCurrentFile() + "[*]");
 }

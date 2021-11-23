@@ -7,7 +7,6 @@
 int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
     // Initialises a 0 so that it could detect if nothing was detected
     int coding = 0;
-
     for (const QString &muscle : muscleGroups) {
         if (muscle == "Front Deltoids")
             coding |= Front_Deltoids;

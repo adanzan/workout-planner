@@ -55,9 +55,8 @@ void Exercise::readExerciseList(){
         quint64 secondary = MuscleEncoding::encodeMuscleGroup(QStringList(splitLine.at(2).split(", ")));
         // The list of equipments required to perform the exercise
         QStringList equipmentList = splitLine.at(3).split(", ");
-        // Pushes the exercise onto the exerciseList file
+        // Pushes the exercise onto the list of exercises
         exerciseList.push_back(Exercise(name, primary, secondary, equipmentList));
-        qDebug() << exerciseList.back()._equipmentList;
 
     }
 

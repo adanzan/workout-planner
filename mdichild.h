@@ -83,7 +83,7 @@ private:
     QString curFile;
     bool isUntitled;
 
-    QTreeWidget *exerciseList;
+    QTreeWidget *exerciseTreeWidget;
 };
 
 #endif
