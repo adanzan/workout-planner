@@ -12,6 +12,8 @@
 
 using namespace std;
 
+list<Exercise> Exercise::exerciseList; // !!!
+
 // Constructor method for the exercise class
 Exercise::Exercise(QString name, quint64 primary, quint64 secondary, QStringList equipmentList) {
     _name = name;
