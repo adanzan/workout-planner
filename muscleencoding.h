@@ -25,13 +25,13 @@ public:
         Quads = 1 << 16,
         Calves = 1 << 17,
         Hamstrings = 1 << 18,
-        Hip_Abductors = 1 << 19,
-        Hip_Adductors = 1 << 20,
+        Hip_Abductor = 1 << 19,
+        Hip_Adductor = 1 << 20,
 
         Deltoids = Front_Deltoids | Side_Deltoids | Rear_Deltoids,
         Chest = Upper_Chest | Middle_Chest | Lower_Chest,
         Abs = Upper_Abs | Lower_Abs | Obliques,
-        Hips = Hip_Abductors | Hip_Adductors
+        Hips = Hip_Abductor | Hip_Adductor
 
 
         // If we see front, side and rear, just spit out deltoids

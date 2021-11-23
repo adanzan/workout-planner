@@ -1,5 +1,5 @@
 #include "exercise.h"
-//Q: Inlcude here or in header?
+//Q: Include here or in header?
 #include "muscleencoding.h"
 
 #include <QFile>
@@ -12,7 +12,8 @@
 
 using namespace std;
 
-list<Exercise> Exercise::exerciseList; // !!!
+// Implementing the list of exercises
+list<Exercise> Exercise::exerciseList;
 
 // Constructor method for the exercise class
 Exercise::Exercise(QString name, quint64 primary, quint64 secondary, QStringList equipmentList) {
@@ -56,6 +57,8 @@ void Exercise::readExerciseList(){
         QStringList equipmentList = splitLine.at(3).split(", ");
         // Pushes the exercise onto the exerciseList file
         exerciseList.push_back(Exercise(name, primary, secondary, equipmentList));
+        qDebug() << exerciseList.back()._equipmentList;
+
     }
 
 }
