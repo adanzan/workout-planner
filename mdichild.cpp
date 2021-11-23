@@ -82,25 +82,21 @@ MdiChild::MdiChild() {
 
     // Nested for loops because there is also one for exerciseQquipment
 
-    while (!Exercise::exerciseList.empty()) {
+    for (Exercise &exercise : Exercise::exerciseList) {
 
         QTreeWidgetItem *exerciseItem = new QTreeWidgetItem(exerciseTreeWidget);
 
-        Exercise poppedExercise = Exercise::exerciseList.front();
-
-//        qDebug() << poppedExercise._name;
-
-        Exercise::exerciseList.pop_front();
-        if (Exercise::exerciseList.empty()) break;
-
-//        qDebug() << Exercise::exerciseList.front()._name;
-
         // Exercise name
-        exerciseItem->setText(0, poppedExercise._name);
+        exerciseItem->setText(0, exercise._name);
         //Primary Muscle Group
-        exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(poppedExercise._primary).at(0));
+        if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()){
+            //Warning that the file was not read correctly, primary muscles were incorrectly entered
+        }
+        else { exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]); }
+
         //Secondary Muscle Group
-        exerciseItem->setText(2, tr("Biceps, Triceps"));
+
+        exerciseItem->setText(2, MuscleEncoding::decodeMuscleGroup(exercise._secondary).join(","));
 
         // Takes an index number and puts it into the data
         // Can have them store a value behind the scenes to index it later
