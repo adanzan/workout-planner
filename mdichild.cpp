@@ -58,8 +58,9 @@
 
 using namespace std;
 
-// 1 = Primary
-// 2 = Secondary
+// Constant values that will be used in setting the data on the muscles being worked
+const int PRIMARY = Qt::UserRole;
+const int SECONDARY = Qt::UserRole + 1;
 
 MdiChild::MdiChild() {
     setAttribute(Qt::WA_DeleteOnClose);
@@ -69,7 +70,6 @@ MdiChild::MdiChild() {
     setLayout(main_layout);
     // Add layout stuff here
 
-
     exerciseTreeWidget = new QTreeWidget();
 
     main_layout->addWidget(exerciseTreeWidget);
@@ -78,53 +78,42 @@ MdiChild::MdiChild() {
     exerciseTreeWidget->setColumnCount(3);
     exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
 
-    // Code the list into the QStringList first then do these
-
-    // Nested for loops because there is also one for exerciseQquipment
-
+    // Loops for each exercise in the list of exercises
     for (Exercise &exercise : Exercise::exerciseList) {
-
         QTreeWidgetItem *exerciseItem = new QTreeWidgetItem(exerciseTreeWidget);
 
         // Exercise name
         exerciseItem->setText(0, exercise._name);
+
         //Primary Muscle Group
         if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()){
             //Warning that the file was not read correctly, primary muscles were incorrectly entered
         }
-        else { exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]); }
+        else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
 
         //Secondary Muscle Group
-
         exerciseItem->setText(2, MuscleEncoding::decodeMuscleGroup(exercise._secondary).join(","));
 
-        // Takes an index number and puts it into the data
-        // Can have them store a value behind the scenes to index it later
+        // Equipments Used
+        for (QString &equipment : exercise._equipmentList) {
+            QTreeWidgetItem *exerciseItemEquipment = new QTreeWidgetItem(exerciseItem);
+            exerciseItemEquipment->setText(0, equipment);
+        }
 
-        // Where to put it in and what to put in
-        // Puts a data in column 0
-        exerciseItem->setData(0, Qt::UserRole, MuscleEncoding::Chest);
-        exerciseItem->setData(0, Qt::UserRole + 1, MuscleEncoding::Biceps | MuscleEncoding::Triceps);
-
-
-        connect(exerciseTreeWidget, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
-
-        // Doing a for loop here and putting in the exercises each iteration
-        //for () {
-        QTreeWidgetItem *exerciseItemEquipment = new QTreeWidgetItem(exerciseItem);
-        exerciseItemEquipment->setText(0, tr("Barbell & Flat Bench"));
-
-        //        //TODO: In the main one, we don't need to do this, we only need one.
-        //         exerciseEquipment = new QTreeWidgetItem(exerciseItem);
-        //         exerciseEquipment->setText(0, tr("Dumbbells & Adjustable Bench"));
+        // Stores data about the muscles being worked
+        exerciseItem->setData(0, PRIMARY, exercise._primary);
+        exerciseItem->setData(0, SECONDARY, exercise._secondary);
 
     }
+    connect(exerciseTreeWidget, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
+
 }
 
 // How we can react to the muscle being clicked
 // Change this to selected
 void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
-    qDebug() << item->data(0, Qt::UserRole);
+    qDebug() << item->data(0, PRIMARY);
+    qDebug() << item->data(0, SECONDARY);
 }
 
 void MdiChild::newFile()
