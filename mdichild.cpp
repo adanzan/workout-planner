@@ -54,13 +54,14 @@
 #include "muscleencoding.h"
 #include "exercise.h"
 
-#include "qgraphicsmusclegroup.h"
+#include "musclemap.h"
 
 #include <list>
 
 using namespace std;
 
 // Constant values that will be used in setting the data on the muscles being worked
+//TODO: Add into enum in header
 const int PRIMARY = Qt::UserRole;
 const int SECONDARY = Qt::UserRole + 1;
 
@@ -73,9 +74,20 @@ MdiChild::MdiChild() {
 
     exerciseTreeWidget = new QTreeWidget();
     main_layout->addWidget(exerciseTreeWidget);
-    muscleMapGraphic = new QGraphicsMuscleGroup();
-    main_layout->addItem(muscleMapGraphic);
-    //
+
+    //Add QListWidget to build the exericse routine
+    // It will need to connect to the muscles worked, since clicking on the exerciese nees to change the muscles worked
+    // Add 2 buttons (left and right) so that
+        // See if I can drag the listwidget items
+        // Think about how I want the user to work with the list widget
+            // Could maybe have how many times a muscle is being worked
+            // Will probably have a
+            // Could also print the exercises at the end
+
+    // QList and Heatmap
+
+    muscleMapWidget = new MuscleMap();
+    main_layout->addWidget(muscleMapWidget);
 
     // Sets up the tree widget
     exerciseTreeWidget->setColumnCount(3);
@@ -95,7 +107,7 @@ MdiChild::MdiChild() {
         else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
 
         //Secondary Muscle Group
-        exerciseItem->setText(2, MuscleEncoding::decodeMuscleGroup(exercise._secondary).join(","));
+        exerciseItem->setText(2, MuscleEncoding::decodeMuscleGroup(exercise._secondary).join(",  "));
 
         // Equipments Used
         for (QString &equipment : exercise._equipmentList) {
@@ -109,14 +121,32 @@ MdiChild::MdiChild() {
 
     }
     connect(exerciseTreeWidget, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
+    // Connects the muscle map widget to the muscle selection changed method in the muscle map class
+    connect(muscleMapWidget, &MuscleMap::selectionChanged, this, &MdiChild::muscleSelectionChanged);
 
 }
-// TODO: Change this to selected
+// TODO: Change this to selected / check the signals
 void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
-    qDebug() << item->data(0, PRIMARY);
-    qDebug() << item->data(0, SECONDARY);
-    // Display muscle group stuff here
+    // Changes the color for all bits back to gray
+    muscleMapWidget->setMuscleGroupBaseColors(~0, Qt::gray);
+
+    muscleMapWidget->setMuscleGroupBaseColors(item->data(0, PRIMARY).toInt(), Qt::red);
+    muscleMapWidget->setMuscleGroupBaseColors(item->data(0, SECONDARY).toInt(), Qt::yellow);
 }
+
+void MdiChild::muscleSelectionChanged(int bits) {
+//    qDebug() << bits;
+    // Loops through the tree widget
+    for (int i = exerciseTreeWidget->topLevelItemCount(); --i>=0;){
+        QTreeWidgetItem *item = exerciseTreeWidget->topLevelItem(i);
+        int exerciseBits = item->data(0, PRIMARY).toInt() | item->data(0, SECONDARY).toInt();
+
+        // Set the exercises that don't work the muscle to hidden
+        // Also, show everything if nothing is selected
+        item->setHidden(bits && !(bits & exerciseBits));
+    }
+}
+
 
 void MdiChild::newFile()
 {

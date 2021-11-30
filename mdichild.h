@@ -53,6 +53,7 @@
 
 #include <QTreeWidget>
 #include <QGraphicsItem>
+#include "musclemap.h"
 
 class MdiChild : public QWidget {
     Q_OBJECT
@@ -75,6 +76,7 @@ private slots:
     void documentWasModified();
     void exerciseClicked(QTreeWidgetItem *item, int column);
 
+    void muscleSelectionChanged(int bits);
 
 private:
     bool maybeSave();
@@ -85,7 +87,7 @@ private:
     bool isUntitled;
 
     QTreeWidget *exerciseTreeWidget;
-    QGraphicsItem *muscleMapGraphic;
+    MuscleMap *muscleMapWidget;
 };
 
 #endif

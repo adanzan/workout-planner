@@ -1,6 +1,7 @@
 #include "musclemap.h"
 
 #include "qgraphicsmusclegroup.h"
+#include "muscleencoding.h"
 
 #include <QtWidgets>
 #include <QtXml>
@@ -64,29 +65,29 @@ MuscleMap::MuscleMap() {
     }
     svgClasses[""]["fill"] = "#000000";
     svgClasses[""]["stroke"] = "none";
-
     std::map<QString, int> idBits;
-    idBits["front_delts"] = 0;
-    idBits["side_delts"] = 1;
-    idBits["rear_delts"] = 2;
-    idBits["upper_pecs"] = 3;
-    idBits["middle_pecs"] = 4;
-    idBits["lower_pecs"] = 5;
-    idBits["upper_traps"] = 6;
-    idBits["upper_back"] = idBits["lower_traps"] = idBits["rhomboids"] = 7;
-    idBits["lower_back"] = idBits["lats"] = 8;
-    idBits["biceps"] = 9;
-    idBits["triceps"] = 10;
-    idBits["forearms"] = 11;
-    idBits["upper_abs"] = idBits["lower_abs"] = 12;
-    idBits["obliques"] = 13;
-    idBits["glutes"] = 15;
-    idBits["quads"] = 16;
-    idBits["calves"] = 17;
-    idBits["hamstrings"] = 18;
-    idBits["hip_abductor"] = 19;
-    idBits["hip_adductor"] = 20;
-    idBits["neck"] = 21;
+    idBits["front_delts"] = MuscleEncoding::Bit_Front_Deltoids;
+    idBits["side_delts"] = MuscleEncoding::Bit_Side_Deltoids;
+    idBits["rear_delts"] = MuscleEncoding::Bit_Rear_Deltoids;
+    idBits["upper_pecs"] = MuscleEncoding::Bit_Upper_Chest;
+    idBits["middle_pecs"] = MuscleEncoding::Bit_Middle_Chest;
+    idBits["lower_pecs"] = MuscleEncoding::Bit_Lower_Chest;
+    idBits["upper_traps"] = MuscleEncoding::Bit_Upper_Traps;
+    idBits["upper_back"] = idBits["lower_traps"] = idBits["rhomboids"] = idBits["lats"] = MuscleEncoding::Bit_Upper_Back;
+    idBits["lower_back"] = MuscleEncoding::Bit_Lower_Back;
+    idBits["biceps"] = MuscleEncoding::Bit_Biceps;
+    idBits["triceps"] = MuscleEncoding::Bit_Triceps;
+    idBits["forearms"] = MuscleEncoding::Bit_Forearms;
+    idBits["upper_abs"] = MuscleEncoding::Bit_Upper_Abs;
+    idBits["lower_abs"] = MuscleEncoding::Bit_Lower_Abs;
+    idBits["obliques"] = MuscleEncoding::Bit_Obliques;
+    idBits["glutes"] = MuscleEncoding::Bit_Glutes;
+    idBits["quads"] = MuscleEncoding::Bit_Quads;
+    idBits["calves"] = MuscleEncoding::Bit_Calves;
+    idBits["hamstrings"] = MuscleEncoding::Bit_Hamstrings;
+    idBits["hip_abductor"] = MuscleEncoding::Bit_Hip_Abductor;
+    idBits["hip_adductor"] = MuscleEncoding::Bit_Hip_Adductor;
+    idBits["neck"] = MuscleEncoding::Bit_Neck;
 
     muscleGroups.resize(22, nullptr);
 
