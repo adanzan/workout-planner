@@ -54,6 +54,8 @@
 #include "muscleencoding.h"
 #include "exercise.h"
 
+#include "qgraphicsmusclegroup.h"
+
 #include <list>
 
 using namespace std;
@@ -68,11 +70,12 @@ MdiChild::MdiChild() {
     // Setting the HBox layout
     QHBoxLayout *main_layout = new QHBoxLayout();
     setLayout(main_layout);
-    // Add layout stuff here
 
     exerciseTreeWidget = new QTreeWidget();
-
     main_layout->addWidget(exerciseTreeWidget);
+    muscleMapGraphic = new QGraphicsMuscleGroup();
+    main_layout->addItem(muscleMapGraphic);
+    //
 
     // Sets up the tree widget
     exerciseTreeWidget->setColumnCount(3);
@@ -108,12 +111,11 @@ MdiChild::MdiChild() {
     connect(exerciseTreeWidget, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
 
 }
-
-// How we can react to the muscle being clicked
-// Change this to selected
+// TODO: Change this to selected
 void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
     qDebug() << item->data(0, PRIMARY);
     qDebug() << item->data(0, SECONDARY);
+    // Display muscle group stuff here
 }
 
 void MdiChild::newFile()

@@ -52,6 +52,7 @@
 #define MDICHILD_H
 
 #include <QTreeWidget>
+#include <QGraphicsItem>
 
 class MdiChild : public QWidget {
     Q_OBJECT
@@ -84,6 +85,7 @@ private:
     bool isUntitled;
 
     QTreeWidget *exerciseTreeWidget;
+    QGraphicsItem *muscleMapGraphic;
 };
 
 #endif
