@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include <QtWidgets>
+#include <QPixmap>
 
 #include "mdichild.h"
 #include "muscleencoding.h"
@@ -72,8 +73,15 @@ MdiChild::MdiChild() {
     QHBoxLayout *main_layout = new QHBoxLayout();
     setLayout(main_layout);
 
+    equipPixLayout = new QVBoxLayout();
+    main_layout->addLayout(equipPixLayout);
+    QLabel* label = new QLabel;
+    label->setPixmap(equipPix[0]);
+    equipPixLayout->addWidget(label);
+
     exerciseTreeWidget = new QTreeWidget();
     main_layout->addWidget(exerciseTreeWidget);
+
 
     //Add QListWidget to build the exericse routine
     // It will need to connect to the muscles worked, since clicking on the exerciese nees to change the muscles worked
@@ -89,7 +97,30 @@ MdiChild::MdiChild() {
     muscleMapWidget = new MuscleMap();
     main_layout->addWidget(muscleMapWidget);
 
-    // Sets up the tree widget
+    QImage barbell(":/images/barbell.jpg");
+    equipPix["Barbell"] = QPixmap::fromImage(barbell);
+    QImage bench(":/images/bench.jpg");
+    equipPix["Bench"] = QPixmap::fromImage(bench);
+    QImage cabMachine(":/images/cable machine.jpg");
+    equipPix["Cable Machine"] = QPixmap::fromImage(cabMachine);
+    QImage aBench(":/images/adjustable bench.jpg");
+    equipPix[3] = QPixmap::fromImage(aBench);
+    QImage cBar(":/images/curl bar.jpg");
+    equipPix[4] = QPixmap::fromImage(cBar);
+    QImage dBar(":/images/dip bar.jpg");
+    equipPix[5] = QPixmap::fromImage(dBar);
+    QImage hCurl(":/images/hamstring curl machine.jpg");
+    equipPix[6] = QPixmap::fromImage(hCurl);
+    QImage hAb(":/images/hip abductor machine.jpg");
+    equipPix[7] = QPixmap::fromImage(hAb);
+    QImage hThrust(":/images/hip thrust machine.jpg");
+    equipPix[8] = QPixmap::fromImage(hThrust);
+    QImage pBar(":/images/pull up bar.jpg");
+    equipPix[9] = QPixmap::fromImage(pBar);
+    QImage qExt(":/images/quad extension machine.jpg");
+    equipPix[10] = QPixmap::fromImage(qExt);
+
+        // Sets up the tree widget
     exerciseTreeWidget->setColumnCount(3);
     exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
 
