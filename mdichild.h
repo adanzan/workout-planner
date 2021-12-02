@@ -52,7 +52,9 @@
 #define MDICHILD_H
 
 #include <QTreeWidget>
+#include <QListWidget>
 #include <QGraphicsItem>
+#include <QPushButton>
 #include "musclemap.h"
 class QVBoxLayout;
 
@@ -70,6 +72,8 @@ public:
     QString userFriendlyCurrentFile();
     QString currentFile() { return curFile; }
 
+    QPushButton *buttonAddExercise;
+    QPushButton *buttonRemoveExercise;
 protected:
     void closeEvent(QCloseEvent *event) override;
 
@@ -78,6 +82,9 @@ private slots:
     void exerciseClicked(QTreeWidgetItem *item, int column);
 
     void muscleSelectionChanged(int bits);
+
+    void buttonAddExerciseClicked();
+    void buttonRemoveExerciseClicked();
 
 private:
     bool maybeSave();
@@ -90,6 +97,7 @@ private:
     QMap<QString, QPixmap> equipPix;
     QVBoxLayout *equipPixLayout;
     QTreeWidget *exerciseTreeWidget;
+    QListWidget *routineListWidget;
     MuscleMap *muscleMapWidget;
 };
 

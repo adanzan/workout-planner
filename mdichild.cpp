@@ -69,18 +69,39 @@ const int SECONDARY = Qt::UserRole + 1;
 MdiChild::MdiChild() {
     setAttribute(Qt::WA_DeleteOnClose);
     isUntitled = true;
-    // Setting the HBox layout
-    QHBoxLayout *main_layout = new QHBoxLayout();
-    setLayout(main_layout);
+    // Setting the HBox layout for the main layout
+    QHBoxLayout *mainLayout = new QHBoxLayout();
+    setLayout(mainLayout);
 
     equipPixLayout = new QVBoxLayout();
-    main_layout->addLayout(equipPixLayout);
+    mainLayout->addLayout(equipPixLayout);
     QLabel* label = new QLabel;
     label->setPixmap(equipPix["Barbell"]);
     equipPixLayout->addWidget(label);
 
     exerciseTreeWidget = new QTreeWidget();
-    main_layout->addWidget(exerciseTreeWidget);
+    mainLayout->addWidget(exerciseTreeWidget);
+
+    // Sets up the tree widget
+    exerciseTreeWidget->setColumnCount(3);
+    exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
+
+    QVBoxLayout *editRoutineButtonLayout = new QVBoxLayout();
+    mainLayout->addLayout(editRoutineButtonLayout);
+
+    // Button to clear the vector
+    buttonAddExercise = new QPushButton("Add");
+    editRoutineButtonLayout->addWidget(buttonAddExercise);
+    connect(buttonAddExercise, &QPushButton::clicked, this, &MdiChild::buttonAddExerciseClicked);
+
+    // Button to retrieve the size of the vector
+    buttonRemoveExercise = new QPushButton("Remove");
+    editRoutineButtonLayout->addWidget(buttonRemoveExercise);
+    connect(buttonRemoveExercise, &QPushButton::clicked, this, &MdiChild::buttonRemoveExerciseClicked);
+
+    // Have a signal slot here, that is called when the button is pressed
+    routineListWidget = new QListWidget();
+    mainLayout->addWidget(routineListWidget);
 
 
     //Add QListWidget to build the exericse routine
@@ -95,7 +116,7 @@ MdiChild::MdiChild() {
     // QList and Heatmap
 
     muscleMapWidget = new MuscleMap();
-    main_layout->addWidget(muscleMapWidget);
+    mainLayout->addWidget(muscleMapWidget);
 
     QImage aBench(":/images/adjustable bench.jpg");
     equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench);
@@ -165,6 +186,7 @@ MdiChild::MdiChild() {
 
 }
 // TODO: Change this to selected / check the signals
+    // Unused column variable, check
 void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
     // Changes the color for all bits back to gray
     muscleMapWidget->setMuscleGroupBaseColors(~0, Qt::gray);
@@ -174,7 +196,6 @@ void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
 }
 
 void MdiChild::muscleSelectionChanged(int bits) {
-//    qDebug() << bits;
     // Loops through the tree widget
     for (int i = exerciseTreeWidget->topLevelItemCount(); --i>=0;){
         QTreeWidgetItem *item = exerciseTreeWidget->topLevelItem(i);
@@ -184,6 +205,14 @@ void MdiChild::muscleSelectionChanged(int bits) {
         // Also, show everything if nothing is selected
         item->setHidden(bits && !(bits & exerciseBits));
     }
+}
+
+void MdiChild::buttonAddExerciseClicked() {
+
+}
+
+void MdiChild::buttonRemoveExerciseClicked() {
+
 }
 
 
