@@ -97,28 +97,36 @@ MdiChild::MdiChild() {
     muscleMapWidget = new MuscleMap();
     main_layout->addWidget(muscleMapWidget);
 
+    QImage aBench(":/images/adjustable bench.jpg");
+    equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench);
     QImage barbell(":/images/barbell.jpg");
     equipPix["Barbell"] = QPixmap::fromImage(barbell);
     QImage bench(":/images/bench.jpg");
     equipPix["Bench"] = QPixmap::fromImage(bench);
     QImage cabMachine(":/images/cable machine.jpg");
     equipPix["Cable Machine"] = QPixmap::fromImage(cabMachine);
-    QImage aBench(":/images/adjustable bench.jpg");
-    equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench);
+    QImage cRaise(":/images/calf raise.jpg");
+    equipPix["Calf Raise Machine"] = QPixmap::fromImage(cRaise);
     QImage cBar(":/images/curl bar.jpg");
     equipPix["Curl Bar"] = QPixmap::fromImage(cBar);
     QImage dBar(":/images/dip bar.jpg");
     equipPix["Dip Bar"] = QPixmap::fromImage(dBar);
+    QImage dBells(":/images/dumbbells.jpg");
+    equipPix["Dumbbells"] = QPixmap::fromImage(dBells);
     QImage hCurl(":/images/hamstring curl machine.jpg");
     equipPix["Hamstring Curl Machine"] = QPixmap::fromImage(hCurl);
     QImage hAb(":/images/hip abductor machine.jpg");
     equipPix["Hip Abductor Machine"] = QPixmap::fromImage(hAb);
     QImage hThrust(":/images/hip thrust machine.jpg");
     equipPix["Hip Thrust Machine"] = QPixmap::fromImage(hThrust);
+    QImage lPull(":/images/lat-pulldown.jpg");
+    equipPix["Lat Pulldown Machine"] = QPixmap::fromImage(lPull);
     QImage pBar(":/images/pull up bar.jpg");
     equipPix["Pull Up Bar"] = QPixmap::fromImage(pBar);
     QImage qExt(":/images/quad extension machine.jpg");
     equipPix["Quad Extension Machine"] = QPixmap::fromImage(qExt);
+    QImage rack(":/images/squat rack.jpg");
+    equipPix["Squat Rack"] = QPixmap::fromImage(rack);
 
         // Sets up the tree widget
     exerciseTreeWidget->setColumnCount(3);
