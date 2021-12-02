@@ -56,6 +56,7 @@
 #include <QGraphicsItem>
 #include <QPushButton>
 #include "musclemap.h"
+class QVBoxLayout;
 
 class MdiChild : public QWidget {
     Q_OBJECT
@@ -93,6 +94,8 @@ private:
     QString curFile;
     bool isUntitled;
 
+    QMap<QString, QPixmap> equipPix;
+    QVBoxLayout *equipPixLayout;
     QTreeWidget *exerciseTreeWidget;
     QListWidget *routineListWidget;
     MuscleMap *muscleMapWidget;

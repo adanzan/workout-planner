@@ -12,19 +12,16 @@
         <file>images/barbell.jpg</file>
         <file>images/bench.jpg</file>
         <file>images/cable machine.jpg</file>
-        <file>images/calf raise machine seated.jfif</file>
-        <file>images/calf raise machine standing.jfif</file>
         <file>images/curl bar.jpg</file>
         <file>images/dip bar.jpg</file>
         <file>images/dumbbells.jpeg</file>
-        <file>images/fly machine.jfif</file>
         <file>images/hamstring curl machine.jpg</file>
         <file>images/hip abductor machine.jpg</file>
         <file>images/hip thrust machine.jpg</file>
         <file>images/lat pulldown.jpeg</file>
         <file>images/pull up bar.jpg</file>
         <file>images/quad extension machine.jpg</file>
-        <file>images/shrug machine.jfif</file>
-        <file>images/squat rack.jfif</file>
+        <file>images/squat rack.jpg</file>
+        <file>images/calf raise.jpg</file>
     </qresource>
 </RCC>

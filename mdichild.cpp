@@ -49,6 +49,7 @@
 ****************************************************************************/
 
 #include <QtWidgets>
+#include <QPixmap>
 
 #include "mdichild.h"
 #include "muscleencoding.h"
@@ -71,6 +72,12 @@ MdiChild::MdiChild() {
     // Setting the HBox layout for the main layout
     QHBoxLayout *mainLayout = new QHBoxLayout();
     setLayout(mainLayout);
+
+    equipPixLayout = new QVBoxLayout();
+    mainLayout->addLayout(equipPixLayout);
+    QLabel* label = new QLabel;
+    label->setPixmap(equipPix["Barbell"]);
+    equipPixLayout->addWidget(label);
 
     exerciseTreeWidget = new QTreeWidget();
     mainLayout->addWidget(exerciseTreeWidget);
@@ -96,6 +103,7 @@ MdiChild::MdiChild() {
     routineListWidget = new QListWidget();
     mainLayout->addWidget(routineListWidget);
 
+
     //Add QListWidget to build the exericse routine
     // It will need to connect to the muscles worked, since clicking on the exerciese nees to change the muscles worked
     // Add 2 buttons (left and right) so that
@@ -109,6 +117,33 @@ MdiChild::MdiChild() {
 
     muscleMapWidget = new MuscleMap();
     mainLayout->addWidget(muscleMapWidget);
+
+    QImage barbell(":/images/barbell.jpg");
+    equipPix["Barbell"] = QPixmap::fromImage(barbell);
+    QImage bench(":/images/bench.jpg");
+    equipPix["Bench"] = QPixmap::fromImage(bench);
+    QImage cabMachine(":/images/cable machine.jpg");
+    equipPix["Cable Machine"] = QPixmap::fromImage(cabMachine);
+    QImage aBench(":/images/adjustable bench.jpg");
+    equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench);
+    QImage cBar(":/images/curl bar.jpg");
+    equipPix["Curl Bar"] = QPixmap::fromImage(cBar);
+    QImage dBar(":/images/dip bar.jpg");
+    equipPix["Dip Bar"] = QPixmap::fromImage(dBar);
+    QImage hCurl(":/images/hamstring curl machine.jpg");
+    equipPix["Hamstring Curl Machine"] = QPixmap::fromImage(hCurl);
+    QImage hAb(":/images/hip abductor machine.jpg");
+    equipPix["Hip Abductor Machine"] = QPixmap::fromImage(hAb);
+    QImage hThrust(":/images/hip thrust machine.jpg");
+    equipPix["Hip Thrust Machine"] = QPixmap::fromImage(hThrust);
+    QImage pBar(":/images/pull up bar.jpg");
+    equipPix["Pull Up Bar"] = QPixmap::fromImage(pBar);
+    QImage qExt(":/images/quad extension machine.jpg");
+    equipPix["Quad Extension Machine"] = QPixmap::fromImage(qExt);
+
+        // Sets up the tree widget
+    exerciseTreeWidget->setColumnCount(3);
+    exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
 
     // Loops for each exercise in the list of exercises
     for (Exercise &exercise : Exercise::exerciseList) {
