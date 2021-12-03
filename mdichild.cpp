@@ -69,54 +69,16 @@ const int SECONDARY = Qt::UserRole + 1;
 MdiChild::MdiChild() {
     setAttribute(Qt::WA_DeleteOnClose);
     isUntitled = true;
-    // Setting the HBox layout for the main layout
+    // Setting the HBox layout to be the main layout
     QHBoxLayout *mainLayout = new QHBoxLayout();
     setLayout(mainLayout);
 
+// TESTING
     equipPixLayout = new QVBoxLayout();
     mainLayout->addLayout(equipPixLayout);
     QLabel* label = new QLabel;
     label->setPixmap(equipPix["Barbell"]);
     equipPixLayout->addWidget(label);
-
-    exerciseTreeWidget = new QTreeWidget();
-    mainLayout->addWidget(exerciseTreeWidget);
-
-    // Sets up the tree widget
-    exerciseTreeWidget->setColumnCount(3);
-    exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
-
-    QVBoxLayout *editRoutineButtonLayout = new QVBoxLayout();
-    mainLayout->addLayout(editRoutineButtonLayout);
-
-    // Button to clear the vector
-    buttonAddExercise = new QPushButton("Add");
-    editRoutineButtonLayout->addWidget(buttonAddExercise);
-    connect(buttonAddExercise, &QPushButton::clicked, this, &MdiChild::buttonAddExerciseClicked);
-
-    // Button to retrieve the size of the vector
-    buttonRemoveExercise = new QPushButton("Remove");
-    editRoutineButtonLayout->addWidget(buttonRemoveExercise);
-    connect(buttonRemoveExercise, &QPushButton::clicked, this, &MdiChild::buttonRemoveExerciseClicked);
-
-    // Have a signal slot here, that is called when the button is pressed
-    routineListWidget = new QListWidget();
-    mainLayout->addWidget(routineListWidget);
-
-
-    //Add QListWidget to build the exericse routine
-    // It will need to connect to the muscles worked, since clicking on the exerciese nees to change the muscles worked
-    // Add 2 buttons (left and right) so that
-        // See if I can drag the listwidget items
-        // Think about how I want the user to work with the list widget
-            // Could maybe have how many times a muscle is being worked
-            // Will probably have a
-            // Could also print the exercises at the end
-
-    // QList and Heatmap
-
-    muscleMapWidget = new MuscleMap();
-    mainLayout->addWidget(muscleMapWidget);
 
     QImage aBench(":/images/adjustable bench.jpg");
     equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench);
@@ -149,15 +111,48 @@ MdiChild::MdiChild() {
     QImage rack(":/images/squat rack.jpg");
     equipPix["Squat Rack"] = QPixmap::fromImage(rack);
 
-        // Sets up the tree widget
+    // A tree widget to display the exercises
+    exerciseTreeWidget = new QTreeWidget();
+    mainLayout->addWidget(exerciseTreeWidget);
     exerciseTreeWidget->setColumnCount(3);
     exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
+
+    // Buttons to add / remove exercises to the routine
+    //TODO: In the future, consider changing this out so that it works for arrow keys; and get rid of the button
+    QVBoxLayout *editRoutineButtonLayout = new QVBoxLayout();
+    mainLayout->addLayout(editRoutineButtonLayout);
+
+    // Button to add
+    buttonAddExercise = new QPushButton("Add");
+    editRoutineButtonLayout->addWidget(buttonAddExercise);
+    connect(buttonAddExercise, &QPushButton::clicked, this, &MdiChild::buttonAddExerciseClicked);
+
+    // Button to remove
+    buttonRemoveExercise = new QPushButton("Remove");
+    editRoutineButtonLayout->addWidget(buttonRemoveExercise);
+    connect(buttonRemoveExercise, &QPushButton::clicked, this, &MdiChild::buttonRemoveExerciseClicked);
+
+    // Widget to construct the routine
+    //TODO: Have a signal slot here, that is called when the button is pressed
+    routineListWidget = new QListWidget();
+    mainLayout->addWidget(routineListWidget);
+
+    // QList and Heatmap
+    // See if I can drag the listwidget items
+    // Think about how I want the user to work with the list widget
+        // Could maybe have how many times a muscle is being worked
+        // Will probably have a
+        // Could also print the exercises at the end
+
+    // Vector drawing of the muscles being worked
+    muscleMapWidget = new MuscleMap();
+    mainLayout->addWidget(muscleMapWidget);
 
     // Loops for each exercise in the list of exercises
     for (Exercise &exercise : Exercise::exerciseList) {
         QTreeWidgetItem *exerciseItem = new QTreeWidgetItem(exerciseTreeWidget);
 
-        // Exercise name
+        // Exercise Name
         exerciseItem->setText(0, exercise._name);
 
         //Primary Muscle Group
@@ -180,19 +175,22 @@ MdiChild::MdiChild() {
         exerciseItem->setData(0, SECONDARY, exercise._secondary);
 
     }
-    connect(exerciseTreeWidget, &QTreeWidget::itemClicked, this, &MdiChild::exerciseClicked);
+    connect(exerciseTreeWidget, &QTreeWidget::currentItemChanged, this, &MdiChild::exerciseSelectedItemChanged);
     // Connects the muscle map widget to the muscle selection changed method in the muscle map class
     connect(muscleMapWidget, &MuscleMap::selectionChanged, this, &MdiChild::muscleSelectionChanged);
 
 }
-// TODO: Change this to selected / check the signals
-    // Unused column variable, check
-void MdiChild::exerciseClicked(QTreeWidgetItem *item, int column) {
+// Reacts to the changes of selection on the tree widget
+void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
     // Changes the color for all bits back to gray
     muscleMapWidget->setMuscleGroupBaseColors(~0, Qt::gray);
 
-    muscleMapWidget->setMuscleGroupBaseColors(item->data(0, PRIMARY).toInt(), Qt::red);
-    muscleMapWidget->setMuscleGroupBaseColors(item->data(0, SECONDARY).toInt(), Qt::yellow);
+    //Q: Doing this crashes instantly, why ?
+//    muscleMapWidget->setMuscleGroupBaseColors(previous->data(0, PRIMARY).toInt(), Qt::gray);
+//    muscleMapWidget->setMuscleGroupBaseColors(previous->data(0, SECONDARY).toInt(), Qt::gray);
+
+    muscleMapWidget->setMuscleGroupBaseColors(current->data(0, PRIMARY).toInt(), Qt::red);
+    muscleMapWidget->setMuscleGroupBaseColors(current->data(0, SECONDARY).toInt(), Qt::yellow);
 }
 
 void MdiChild::muscleSelectionChanged(int bits) {
@@ -207,12 +205,22 @@ void MdiChild::muscleSelectionChanged(int bits) {
     }
 }
 
+// Adds an exercise to the routine
 void MdiChild::buttonAddExerciseClicked() {
+    // Creates a temporary list item and adds it to the routine
+    QListWidgetItem *tempListItem = new QListWidgetItem;
 
+    tempListItem->setText(exerciseTreeWidget->currentItem()->text(0));
+    //Q: What is going on here?
+//    tempListItem->setData(exerciseTreeWidget->currentItem()->data(0, PRIMARY));
+    //    tempListItem->setData(0, exerciseTreeWidget->currentItem()->data(0, SECONDARY));
+    routineListWidget->insertItem(1, tempListItem);
 }
 
+// Removes an exercise from the routine
 void MdiChild::buttonRemoveExerciseClicked() {
-
+    // Removes the list widget at the current row
+    routineListWidget->takeItem(routineListWidget->currentRow());
 }
 
 
