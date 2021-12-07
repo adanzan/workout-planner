@@ -91,6 +91,9 @@ private:
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
 
+    void loadImages();
+
+
     QString curFile;
     bool isUntitled;
 

@@ -66,6 +66,40 @@ using namespace std;
 const int PRIMARY = Qt::UserRole;
 const int SECONDARY = Qt::UserRole + 1;
 
+void MdiChild::loadImages(){
+    int size = 200;
+    QImage aBench(":/images/adjustable bench.jpg");
+    equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench.scaled(size, size, Qt::KeepAspectRatio));
+    QImage barbell(":/images/barbell.jpg");
+    equipPix["Barbell"] = QPixmap::fromImage(barbell.scaled(size, size, Qt::KeepAspectRatio));
+    QImage bench(":/images/bench.jpg");
+    equipPix["Bench"] = QPixmap::fromImage(bench.scaled(size, size, Qt::KeepAspectRatio));
+    QImage cabMachine(":/images/cable machine.jpg");
+    equipPix["Cable Machine"] = QPixmap::fromImage(cabMachine.scaled(size, size, Qt::KeepAspectRatio));
+    QImage cRaise(":/images/calf raise.jpg");
+    equipPix["Calf Raise Machine"] = QPixmap::fromImage(cRaise.scaled(size, size, Qt::KeepAspectRatio));
+    QImage cBar(":/images/curl bar.jpg");
+    equipPix["Curl Bar"] = QPixmap::fromImage(cBar.scaled(size, size, Qt::KeepAspectRatio));
+    QImage dBar(":/images/dip bar.jpg");
+    equipPix["Dip Bar"] = QPixmap::fromImage(dBar.scaled(size, size, Qt::KeepAspectRatio));
+    QImage dBells(":/images/dumbbells.jpg");
+    equipPix["Dumbbells"] = QPixmap::fromImage(dBells.scaled(size, size, Qt::KeepAspectRatio));
+    QImage hCurl(":/images/hamstring curl machine.jpg");
+    equipPix["Hamstring Curl Machine"] = QPixmap::fromImage(hCurl.scaled(size, size, Qt::KeepAspectRatio));
+    QImage hAb(":/images/hip abductor machine.jpg");
+    equipPix["Hip Abductor Machine"] = QPixmap::fromImage(hAb.scaled(size, size, Qt::KeepAspectRatio));
+    QImage hThrust(":/images/hip thrust machine.jpg");
+    equipPix["Hip Thrust Machine"] = QPixmap::fromImage(hThrust.scaled(size, size, Qt::KeepAspectRatio));
+    QImage lPull(":/images/lat-pulldown.jpg");
+    equipPix["Lat Pulldown Machine"] = QPixmap::fromImage(lPull.scaled(size, size, Qt::KeepAspectRatio));
+    QImage pBar(":/images/pull up bar.jpg");
+    equipPix["Pull Up Bar"] = QPixmap::fromImage(pBar.scaled(size, size, Qt::KeepAspectRatio));
+    QImage qExt(":/images/quad extension machine.jpg");
+    equipPix["Quad Extension Machine"] = QPixmap::fromImage(qExt.scaled(size, size, Qt::KeepAspectRatio));
+    QImage rack(":/images/squat rack.jpg");
+    equipPix["Squat Rack"] = QPixmap::fromImage(rack.scaled(size, size, Qt::KeepAspectRatio));
+}
+
 MdiChild::MdiChild() {
     setAttribute(Qt::WA_DeleteOnClose);
     isUntitled = true;
@@ -75,9 +109,6 @@ MdiChild::MdiChild() {
 
     equipPixLayout = new QVBoxLayout();
     mainLayout->addLayout(equipPixLayout);
-    QLabel* label = new QLabel;
-    label->setPixmap(equipPix["Barbell"]);
-    equipPixLayout->addWidget(label);
 
     exerciseTreeWidget = new QTreeWidget();
     mainLayout->addWidget(exerciseTreeWidget);
@@ -118,36 +149,11 @@ MdiChild::MdiChild() {
     muscleMapWidget = new MuscleMap();
     mainLayout->addWidget(muscleMapWidget);
 
-    QImage aBench(":/images/adjustable bench.jpg");
-    equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench);
-    QImage barbell(":/images/barbell.jpg");
-    equipPix["Barbell"] = QPixmap::fromImage(barbell);
-    QImage bench(":/images/bench.jpg");
-    equipPix["Bench"] = QPixmap::fromImage(bench);
-    QImage cabMachine(":/images/cable machine.jpg");
-    equipPix["Cable Machine"] = QPixmap::fromImage(cabMachine);
-    QImage cRaise(":/images/calf raise.jpg");
-    equipPix["Calf Raise Machine"] = QPixmap::fromImage(cRaise);
-    QImage cBar(":/images/curl bar.jpg");
-    equipPix["Curl Bar"] = QPixmap::fromImage(cBar);
-    QImage dBar(":/images/dip bar.jpg");
-    equipPix["Dip Bar"] = QPixmap::fromImage(dBar);
-    QImage dBells(":/images/dumbbells.jpg");
-    equipPix["Dumbbells"] = QPixmap::fromImage(dBells);
-    QImage hCurl(":/images/hamstring curl machine.jpg");
-    equipPix["Hamstring Curl Machine"] = QPixmap::fromImage(hCurl);
-    QImage hAb(":/images/hip abductor machine.jpg");
-    equipPix["Hip Abductor Machine"] = QPixmap::fromImage(hAb);
-    QImage hThrust(":/images/hip thrust machine.jpg");
-    equipPix["Hip Thrust Machine"] = QPixmap::fromImage(hThrust);
-    QImage lPull(":/images/lat-pulldown.jpg");
-    equipPix["Lat Pulldown Machine"] = QPixmap::fromImage(lPull);
-    QImage pBar(":/images/pull up bar.jpg");
-    equipPix["Pull Up Bar"] = QPixmap::fromImage(pBar);
-    QImage qExt(":/images/quad extension machine.jpg");
-    equipPix["Quad Extension Machine"] = QPixmap::fromImage(qExt);
-    QImage rack(":/images/squat rack.jpg");
-    equipPix["Squat Rack"] = QPixmap::fromImage(rack);
+
+    loadImages();
+    QLabel* label = new QLabel;
+    label->setPixmap(equipPix["Barbell"]);
+    equipPixLayout->addWidget(label);
 
         // Sets up the tree widget
     exerciseTreeWidget->setColumnCount(3);
