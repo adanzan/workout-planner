@@ -79,7 +79,7 @@ protected:
 
 private slots:
     void documentWasModified();
-    void exerciseClicked(QTreeWidgetItem *item, int column);
+    void exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 
     void muscleSelectionChanged(int bits);
 
