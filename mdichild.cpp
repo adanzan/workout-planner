@@ -73,13 +73,11 @@ MdiChild::MdiChild() {
     QHBoxLayout *mainLayout = new QHBoxLayout();
     setLayout(mainLayout);
 
-// TESTING
     equipPixLayout = new QVBoxLayout();
     mainLayout->addLayout(equipPixLayout);
-    QLabel* label = new QLabel;
-    label->setPixmap(equipPix["Barbell"]);
-    equipPixLayout->addWidget(label);
 
+    // TODO:Move into method
+    // Resize
     QImage aBench(":/images/adjustable bench.jpg");
     equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench);
     QImage barbell(":/images/barbell.jpg");
@@ -111,6 +109,11 @@ MdiChild::MdiChild() {
     QImage rack(":/images/squat rack.jpg");
     equipPix["Squat Rack"] = QPixmap::fromImage(rack);
 
+
+//    QLabel* label = new QLabel;
+//    label->setPixmap(equipPix["Barbell"]);
+//    equipPixLayout->addWidget(label);
+
     // A tree widget to display the exercises
     exerciseTreeWidget = new QTreeWidget();
     mainLayout->addWidget(exerciseTreeWidget);
@@ -133,16 +136,24 @@ MdiChild::MdiChild() {
     connect(buttonRemoveExercise, &QPushButton::clicked, this, &MdiChild::buttonRemoveExerciseClicked);
 
     // Widget to construct the routine
-    //TODO: Have a signal slot here, that is called when the button is pressed
+    //TODO: Change the list to a vboxlayout, add the list and 2 buttons (print and analyze (heatmap))
+    routineLayout = new QVBoxLayout();
     routineListWidget = new QListWidget();
-    mainLayout->addWidget(routineListWidget);
+    routineLayout->addWidget(routineListWidget);
+    mainLayout->addLayout(routineLayout);
 
-    // QList and Heatmap
-    // See if I can drag the listwidget items
-    // Think about how I want the user to work with the list widget
-        // Could maybe have how many times a muscle is being worked
-        // Will probably have a
-        // Could also print the exercises at the end
+    buttonPrintRoutine = new QPushButton("Print");
+    routineLayout->addWidget(buttonPrintRoutine);
+    connect(buttonPrintRoutine, &QPushButton::clicked, this, &MdiChild::buttonPrintRoutineClicked);
+
+    buttonAnalyzeRoutine = new QPushButton("Analyze");
+    routineLayout->addWidget(buttonAnalyzeRoutine);
+    connect(buttonAnalyzeRoutine, &QPushButton::clicked, this, &MdiChild::buttonAnalyzeRoutineClicked);
+
+    //connect
+
+    // TODO:Heatmap
+
 
     // Vector drawing of the muscles being worked
     muscleMapWidget = new MuscleMap();
@@ -189,8 +200,14 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
 //    muscleMapWidget->setMuscleGroupBaseColors(previous->data(0, PRIMARY).toInt(), Qt::gray);
 //    muscleMapWidget->setMuscleGroupBaseColors(previous->data(0, SECONDARY).toInt(), Qt::gray);
 
-    muscleMapWidget->setMuscleGroupBaseColors(current->data(0, PRIMARY).toInt(), Qt::red);
-    muscleMapWidget->setMuscleGroupBaseColors(current->data(0, SECONDARY).toInt(), Qt::yellow);
+
+    QTreeWidgetItem *parentItem = current->parent();
+    // If parentItem is not null, sets the colorItem to the parentItem
+    QTreeWidgetItem *colorItem = parentItem ? parentItem:current;
+    muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, PRIMARY).toInt(), Qt::red);
+    muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, SECONDARY).toInt(), Qt::yellow);
+
+    if (parentItem) {}
 }
 
 void MdiChild::muscleSelectionChanged(int bits) {
@@ -205,15 +222,26 @@ void MdiChild::muscleSelectionChanged(int bits) {
     }
 }
 
+// Prints the routine
+void MdiChild::buttonPrintRoutineClicked() {}
+
+// Analyzes the routine (heatmap)
+void MdiChild::buttonAnalyzeRoutineClicked() {
+    // A map of the muscle bit and the number of times it is worked in the routine
+    map<int,int> muscleTimesWorked;
+
+
+}
+
+
 // Adds an exercise to the routine
 void MdiChild::buttonAddExerciseClicked() {
     // Creates a temporary list item and adds it to the routine
     QListWidgetItem *tempListItem = new QListWidgetItem;
 
     tempListItem->setText(exerciseTreeWidget->currentItem()->text(0));
-    //Q: What is going on here?
-//    tempListItem->setData(exerciseTreeWidget->currentItem()->data(0, PRIMARY));
-    //    tempListItem->setData(0, exerciseTreeWidget->currentItem()->data(0, SECONDARY));
+    tempListItem->setData(PRIMARY, exerciseTreeWidget->currentItem()->data(0, PRIMARY));
+    tempListItem->setData(SECONDARY, exerciseTreeWidget->currentItem()->data(0, SECONDARY));
     routineListWidget->insertItem(1, tempListItem);
 }
 

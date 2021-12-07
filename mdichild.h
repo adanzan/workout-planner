@@ -72,6 +72,9 @@ public:
     QString userFriendlyCurrentFile();
     QString currentFile() { return curFile; }
 
+    QPushButton *buttonPrintRoutine;
+    QPushButton *buttonAnalyzeRoutine;
+
     QPushButton *buttonAddExercise;
     QPushButton *buttonRemoveExercise;
 protected:
@@ -82,6 +85,9 @@ private slots:
     void exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous);
 
     void muscleSelectionChanged(int bits);
+
+    void buttonPrintRoutineClicked();
+    void buttonAnalyzeRoutineClicked();
 
     void buttonAddExerciseClicked();
     void buttonRemoveExerciseClicked();
@@ -97,6 +103,7 @@ private:
     QMap<QString, QPixmap> equipPix;
     QVBoxLayout *equipPixLayout;
     QTreeWidget *exerciseTreeWidget;
+    QVBoxLayout *routineLayout;
     QListWidget *routineListWidget;
     MuscleMap *muscleMapWidget;
 };
