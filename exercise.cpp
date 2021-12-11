@@ -42,7 +42,7 @@ void Exercise::readExerciseList(){
     // A QStringList of the line, created by splitting "line" by tabs
     QStringList splitLine;
     // While the exercise list file is not at the end
-    while(!exerciseText.atEnd()){
+    while (!exerciseText.atEnd()){
         line = exerciseText.readLine();
         // Splits the elements by tab
         splitLine = line.split("\t");
@@ -57,7 +57,5 @@ void Exercise::readExerciseList(){
         QStringList equipmentList = splitLine.at(3).split(", ");
         // Pushes the exercise onto the list of exercises
         exerciseList.push_back(Exercise(name, primary, secondary, equipmentList));
-
     }
-
 }

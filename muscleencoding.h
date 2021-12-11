@@ -29,6 +29,9 @@ public:
         Bit_Hip_Adductor,
         Bit_Neck,
 
+        // How many bits I have
+        Bit_Count,
+
         Front_Deltoids = 1 << Bit_Front_Deltoids,
         Side_Deltoids = 1 << Bit_Side_Deltoids,
         Rear_Deltoids = 1 << Bit_Rear_Deltoids,
