@@ -1,4 +1,4 @@
-QT += widgets xml
+QT += widgets xml printsupport
 requires(qtConfig(filedialog))
 
 HEADERS       = mainwindow.h \
