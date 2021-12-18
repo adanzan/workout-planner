@@ -158,11 +158,6 @@ MdiChild::MdiChild() {
     routineLayout->addWidget(buttonAnalyzeRoutine);
     connect(buttonAnalyzeRoutine, &QPushButton::clicked, this, &MdiChild::buttonAnalyzeRoutineClicked);
 
-    //connect
-
-    // TODO:Heatmap
-
-
     // Vector drawing of the muscles being worked
     muscleMapWidget = new MuscleMap();
     mainLayout->addWidget(muscleMapWidget);
@@ -197,6 +192,7 @@ MdiChild::MdiChild() {
     // Connects the muscle map widget to the muscle selection changed method in the muscle map class
     connect(muscleMapWidget, &MuscleMap::selectionChanged, this, &MdiChild::muscleSelectionChanged);
 }
+
 // Reacts to the changes of selection on the tree widget
 void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
     // Changes the color for all bits back to gray
@@ -228,30 +224,61 @@ void MdiChild::buttonPrintRoutineClicked() {}
 
 // Analyzes the routine (heatmap)
 void MdiChild::buttonAnalyzeRoutineClicked() {
-    // A vector of the muscle bit and the number of times it is worked in the routine
-    vector<int,int> muscleTimesWorked;
-    // Loops through the items in the routine list widget
-    for (int i=0; i<routineListWidget->count(); i++) {
-//        muscleTimesWorked.insert((routineListWidget->itemAt(i)->data(0, PRIMARY));
+    int colorBitMaxValue = 2 * (routineListWidget->count()) + 1;
+    // A vector that stores which muscles should be colored?
+    vector<int> colorBits(colorBitMaxValue, 0);
+    // Sets all the muscles worked to 0?
+    colorBits[0] = ~0;
+
+    // Loops through the routineListWidget
+    qDebug() << routineListWidget->count();
+    for (int i = 0; i < routineListWidget->count(); i++) {
+        QListWidgetItem *routineItem = routineListWidget->item(i);
+        // Loops through the colorBit and adds the primary bits
+        for (int j=colorBitMaxValue; --j>=0;) {
+            int moveBits = colorBits[j] & routineItem->data(PRIMARY).toInt();
+            // If there are exercises to move, move them
+            if (moveBits) {
+                colorBits[j] &= ~moveBits;
+                colorBits[j+2] |= moveBits;
+            }
+        }
+        //Loops through the colorbit and adds the secondary bits
+        for (int j=colorBitMaxValue; --j>=0;) {
+            int moveBits = colorBits[j] & routineItem->data(SECONDARY).toInt();
+            if (moveBits) {
+                colorBits[j] &= ~moveBits;
+                colorBits[j+1] |= moveBits;
+            }
+        }
     }
-
-    //Color later on
-
-    //TODO: Loop through the routine, for every bit that's set, increment it
-    //
-
+    //Coloring stuff here
+    for (int i=0; i<colorBitMaxValue; i++) {
+        QColor color;
+        if (i == 0)
+            color = Qt::gray;
+        else {
+            double hue = i * 2.0 / 27.0;
+            if (hue > 2.0 / 3.0) hue = 5.0 / 6.0;
+            color = QColor::fromHsvF(hue, 1.0, 1.0);
+        }
+//        qDebug() << color << MuscleEncoding::decodeMuscleGroup(colorBits[i]);
+        muscleMapWidget->setMuscleGroupBaseColors(colorBits[i], color);
+    }
 }
-
 
 // Adds an exercise to the routine
 void MdiChild::buttonAddExerciseClicked() {
     // Creates a temporary list item and adds it to the routine
     QListWidgetItem *tempListItem = new QListWidgetItem;
+    QTreeWidgetItem *currentItem = exerciseTreeWidget->currentItem();
+    // If the current item has a parent, set current item to its parent
+    if (currentItem->parent()) currentItem = currentItem->parent();
 
-    tempListItem->setText(exerciseTreeWidget->currentItem()->text(0));
-    tempListItem->setData(PRIMARY, exerciseTreeWidget->currentItem()->data(0, PRIMARY));
-    tempListItem->setData(SECONDARY, exerciseTreeWidget->currentItem()->data(0, SECONDARY));
-    routineListWidget->insertItem(1, tempListItem);
+    tempListItem->setText(currentItem->text(0));
+    tempListItem->setData(PRIMARY, currentItem->data(0, PRIMARY));
+    tempListItem->setData(SECONDARY, currentItem->data(0, SECONDARY));
+    routineListWidget->insertItem(routineListWidget->count(), tempListItem);
 }
 
 // Removes an exercise from the routine
@@ -259,7 +286,6 @@ void MdiChild::buttonRemoveExerciseClicked() {
     // Removes the list widget at the current row
     routineListWidget->takeItem(routineListWidget->currentRow());
 }
-
 
 void MdiChild::newFile() {
     static int sequenceNumber = 1;
