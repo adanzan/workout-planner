@@ -69,7 +69,7 @@ const int PRIMARY = Qt::UserRole;
 const int SECONDARY = Qt::UserRole + 1;
 
 // Loads the images
-void MdiChild::loadImages(){
+void MdiChild::loadImages() {
     int size = 200;
     QImage aBench(":/images/adjustable bench.jpg");
     equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench.scaled(size, size, Qt::KeepAspectRatio));
@@ -130,7 +130,7 @@ MdiChild::MdiChild() {
     QVBoxLayout *editRoutineButtonLayout = new QVBoxLayout();
     mainLayout->addLayout(editRoutineButtonLayout);
 
-    // Button to add
+    // Button to add an exercise
     buttonAddExercise = new QPushButton("Add");
     editRoutineButtonLayout->addWidget(buttonAddExercise);
     connect(buttonAddExercise, &QPushButton::clicked, this, &MdiChild::buttonAddExerciseClicked);
@@ -141,24 +141,20 @@ MdiChild::MdiChild() {
     connect(buttonRemoveExercise, &QPushButton::clicked, this, &MdiChild::buttonRemoveExerciseClicked);
 
     // Widget to construct the routine
-    //TODO: Change the list to a vboxlayout, add the list and 2 buttons (print and analyze (heatmap))
     routineLayout = new QVBoxLayout();
     routineListWidget = new QListWidget();
     routineLayout->addWidget(routineListWidget);
     mainLayout->addLayout(routineLayout);
 
+    // Button print the routine
     buttonPrintRoutine = new QPushButton("Print");
     routineLayout->addWidget(buttonPrintRoutine);
     connect(buttonPrintRoutine, &QPushButton::clicked, this, &MdiChild::buttonPrintRoutineClicked);
 
+    // Button to analyze the routine
     buttonAnalyzeRoutine = new QPushButton("Analyze");
     routineLayout->addWidget(buttonAnalyzeRoutine);
     connect(buttonAnalyzeRoutine, &QPushButton::clicked, this, &MdiChild::buttonAnalyzeRoutineClicked);
-
-    //connect
-
-    // TODO:Heatmap
-
 
     // Vector drawing of the muscles being worked
     muscleMapWidget = new MuscleMap();
@@ -173,9 +169,8 @@ MdiChild::MdiChild() {
 
         //Primary Muscle Group
         if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()){
-            //Warning that the file was not read correctly, primary muscles were incorrectly entered
-        }
-        else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
+            //TODO:Warning that the file was not read correctly, primary muscles were incorrectly entered
+        } else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
 
         //Secondary Muscle Group
         exerciseItem->setText(2, MuscleEncoding::decodeMuscleGroup(exercise._secondary).join(",  "));
@@ -194,17 +189,12 @@ MdiChild::MdiChild() {
     connect(exerciseTreeWidget, &QTreeWidget::currentItemChanged, this, &MdiChild::exerciseSelectedItemChanged);
     // Connects the muscle map widget to the muscle selection changed method in the muscle map class
     connect(muscleMapWidget, &MuscleMap::selectionChanged, this, &MdiChild::muscleSelectionChanged);
-
 }
+
 // Reacts to the changes of selection on the tree widget
 void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
     // Changes the color for all bits back to gray
     muscleMapWidget->setMuscleGroupBaseColors(~0, Qt::gray);
-
-    //Q: Doing this crashes instantly, why ?
-//    muscleMapWidget->setMuscleGroupBaseColors(previous->data(0, PRIMARY).toInt(), Qt::gray);
-//    muscleMapWidget->setMuscleGroupBaseColors(previous->data(0, SECONDARY).toInt(), Qt::gray);
-
 
     QTreeWidgetItem *parentItem = current->parent();
     // If parentItem is not null, sets the colorItem to the parentItem
@@ -233,7 +223,7 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
 
 void MdiChild::muscleSelectionChanged(int bits) {
     // Loops through the tree widget
-    for (int i = exerciseTreeWidget->topLevelItemCount(); --i>=0;){
+    for (int i = exerciseTreeWidget->topLevelItemCount(); --i>=0;) {
         QTreeWidgetItem *item = exerciseTreeWidget->topLevelItem(i);
         int exerciseBits = item->data(0, PRIMARY).toInt() | item->data(0, SECONDARY).toInt();
 
@@ -291,22 +281,61 @@ void MdiChild::buttonPrintRoutineClicked() {
 
 // Analyzes the routine (heatmap)
 void MdiChild::buttonAnalyzeRoutineClicked() {
-    // A map of the muscle bit and the number of times it is worked in the routine
-    map<int,int> muscleTimesWorked;
+    int colorBitMaxValue = 2 * (routineListWidget->count()) + 1;
+    // A vector that stores which muscles should be colored?
+    vector<int> colorBits(colorBitMaxValue, 0);
+    // Sets all the muscles worked to 0?
+    colorBits[0] = ~0;
 
-
+    // Loops through the routineListWidget
+    qDebug() << routineListWidget->count();
+    for (int i = 0; i < routineListWidget->count(); i++) {
+        QListWidgetItem *routineItem = routineListWidget->item(i);
+        // Loops through the colorBit and adds the primary bits
+        for (int j=colorBitMaxValue; --j>=0;) {
+            int moveBits = colorBits[j] & routineItem->data(PRIMARY).toInt();
+            // If there are exercises to move, move them
+            if (moveBits) {
+                colorBits[j] &= ~moveBits;
+                colorBits[j+2] |= moveBits;
+            }
+        }
+        //Loops through the colorbit and adds the secondary bits
+        for (int j=colorBitMaxValue; --j>=0;) {
+            int moveBits = colorBits[j] & routineItem->data(SECONDARY).toInt();
+            if (moveBits) {
+                colorBits[j] &= ~moveBits;
+                colorBits[j+1] |= moveBits;
+            }
+        }
+    }
+    //Coloring stuff here
+    for (int i=0; i<colorBitMaxValue; i++) {
+        QColor color;
+        if (i == 0)
+            color = Qt::gray;
+        else {
+            double hue = i * 2.0 / 27.0;
+            if (hue > 2.0 / 3.0) hue = 5.0 / 6.0;
+            color = QColor::fromHsvF(hue, 1.0, 1.0);
+        }
+//        qDebug() << color << MuscleEncoding::decodeMuscleGroup(colorBits[i]);
+        muscleMapWidget->setMuscleGroupBaseColors(colorBits[i], color);
+    }
 }
-
 
 // Adds an exercise to the routine
 void MdiChild::buttonAddExerciseClicked() {
     // Creates a temporary list item and adds it to the routine
     QListWidgetItem *tempListItem = new QListWidgetItem;
+    QTreeWidgetItem *currentItem = exerciseTreeWidget->currentItem();
+    // If the current item has a parent, set current item to its parent
+    if (currentItem->parent()) currentItem = currentItem->parent();
 
-    tempListItem->setText(exerciseTreeWidget->currentItem()->text(0));
-    tempListItem->setData(PRIMARY, exerciseTreeWidget->currentItem()->data(0, PRIMARY));
-    tempListItem->setData(SECONDARY, exerciseTreeWidget->currentItem()->data(0, SECONDARY));
-    routineListWidget->insertItem(1, tempListItem);
+    tempListItem->setText(currentItem->text(0));
+    tempListItem->setData(PRIMARY, currentItem->data(0, PRIMARY));
+    tempListItem->setData(SECONDARY, currentItem->data(0, SECONDARY));
+    routineListWidget->insertItem(routineListWidget->count(), tempListItem);
 }
 
 // Removes an exercise from the routine
@@ -315,9 +344,7 @@ void MdiChild::buttonRemoveExerciseClicked() {
     routineListWidget->takeItem(routineListWidget->currentRow());
 }
 
-
-void MdiChild::newFile()
-{
+void MdiChild::newFile() {
     static int sequenceNumber = 1;
 
     isUntitled = true;
@@ -326,8 +353,7 @@ void MdiChild::newFile()
 
 }
 
-bool MdiChild::loadFile(const QString &fileName)
-{
+bool MdiChild::loadFile(const QString &fileName) {
     QFile file(fileName);
     if (!file.open(QFile::ReadOnly | QFile::Text)) {
         QMessageBox::warning(this, tr("MDI"),
@@ -347,8 +373,7 @@ bool MdiChild::loadFile(const QString &fileName)
     return true;
 }
 
-bool MdiChild::save()
-{
+bool MdiChild::save() {
     if (isUntitled) {
         return saveAs();
     } else {
@@ -356,8 +381,7 @@ bool MdiChild::save()
     }
 }
 
-bool MdiChild::saveAs()
-{
+bool MdiChild::saveAs() {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
                                                     curFile);
     if (fileName.isEmpty())
@@ -366,8 +390,7 @@ bool MdiChild::saveAs()
     return saveFile(fileName);
 }
 
-bool MdiChild::saveFile(const QString &fileName)
-{
+bool MdiChild::saveFile(const QString &fileName) {
     QString errorMessage;
 
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
@@ -394,13 +417,11 @@ bool MdiChild::saveFile(const QString &fileName)
     return true;
 }
 
-QString MdiChild::userFriendlyCurrentFile()
-{
+QString MdiChild::userFriendlyCurrentFile() {
     return strippedName(curFile);
 }
 
-void MdiChild::closeEvent(QCloseEvent *event)
-{
+void MdiChild::closeEvent(QCloseEvent *event) {
     if (maybeSave()) {
         event->accept();
     } else {
@@ -408,12 +429,9 @@ void MdiChild::closeEvent(QCloseEvent *event)
     }
 }
 
-void MdiChild::documentWasModified()
-{
-}
+void MdiChild::documentWasModified() { }
 
-bool MdiChild::maybeSave()
-{
+bool MdiChild::maybeSave() {
     // If something has been modified
     if (false)
         return true;
@@ -435,8 +453,7 @@ bool MdiChild::maybeSave()
     return true;
 }
 
-void MdiChild::setCurrentFile(const QString &fileName)
-{
+void MdiChild::setCurrentFile(const QString &fileName) {
     curFile = QFileInfo(fileName).canonicalFilePath();
     isUntitled = false;
 
@@ -445,7 +462,6 @@ void MdiChild::setCurrentFile(const QString &fileName)
     setWindowTitle(userFriendlyCurrentFile() + "[*]");
 }
 
-QString MdiChild::strippedName(const QString &fullFileName)
-{
+QString MdiChild::strippedName(const QString &fullFileName) {
     return QFileInfo(fullFileName).fileName();
 }
