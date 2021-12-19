@@ -1,12 +1,12 @@
 #include <QtWidgets>
 #include <QPixmap>
+#include <QPrinter>
+#include <QPrintDialog>
+#include <QKeyEvent>
 
 #include "mdichild.h"
 #include "muscleencoding.h"
 #include "exercise.h"
-#include <QPrinter>
-#include <QPrintDialog>
-
 #include "musclemap.h"
 
 #include <list>
@@ -132,6 +132,15 @@ MdiChild::MdiChild() {
     connect(exerciseTreeWidget, &QTreeWidget::currentItemChanged, this, &MdiChild::exerciseSelectedItemChanged);
     // Connects the muscle map widget to the muscle selection changed method in the muscle map class
     connect(muscleMapWidget, &MuscleMap::selectionChanged, this, &MdiChild::muscleSelectionChanged);
+}
+
+void MdiChild::arrowKeysPressed(QKeyEvent *event) {
+    if (event->key() == Qt::Key_0) {
+        qDebug() << "Left is clicked";
+        buttonRemoveExerciseClicked();
+        event->accept();
+    }
+    if (event->key() == Qt::Key_Right) buttonAddExerciseClicked();
 }
 
 // Reacts to the changes of selection on the tree widget

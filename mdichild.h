@@ -96,11 +96,11 @@ private:
     bool maybeSave();
     void setCurrentFile(const QString &fileName);
     QString strippedName(const QString &fullFileName);
-
     void loadImages();
-
     QString curFile;
     bool isUntitled;
+
+    void arrowKeysPressed(QKeyEvent *event);
 
     QMap<QString, QPixmap> equipPix;
     QVBoxLayout *equipPixLayout;
@@ -108,6 +108,7 @@ private:
     QVBoxLayout *routineLayout;
     QListWidget *routineListWidget;
     MuscleMap *muscleMapWidget;
+
 
     // Constant values that will be used in setting the data on the muscles being worked
     enum Numbering{
