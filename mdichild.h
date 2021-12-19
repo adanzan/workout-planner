@@ -109,6 +109,12 @@ private:
     QVBoxLayout *routineLayout;
     QListWidget *routineListWidget;
     MuscleMap *muscleMapWidget;
+
+    // Constant values that will be used in setting the data on the muscles being worked
+    enum Numbering{
+        PRIMARY = Qt::UserRole,
+        SECONDARY = Qt::UserRole + 1
+    };
 };
 
 #endif

@@ -8,8 +8,6 @@
 #include <QTextStream>
 #include <QMessageBox>
 
-#include <QDebug>
-
 using namespace std;
 
 // Implementing the list of exercises
@@ -23,13 +21,13 @@ Exercise::Exercise(QString name, quint64 primary, quint64 secondary, QStringList
     _equipmentList = equipmentList;
 }
 
-void Exercise::readExerciseList(){
+void Exercise::readExerciseList() {
     // The file path of the list of exercises
     const QString EXERCISE_LIST_FILE_PATH = ":/data/exercise_list.tsv";
 
     QFile fileExerciseList(EXERCISE_LIST_FILE_PATH);
     // Warns if the file was unable to be opened.
-    if (!fileExerciseList.open(QIODevice::ReadOnly)){
+    if (!fileExerciseList.open(QIODevice::ReadOnly)) {
         //Q: Why error here
 //        QMessageBox::warning(this, "Error", QString("Was not able to open the exercise list file"));
         return;
@@ -42,7 +40,7 @@ void Exercise::readExerciseList(){
     // A QStringList of the line, created by splitting "line" by tabs
     QStringList splitLine;
     // While the exercise list file is not at the end
-    while (!exerciseText.atEnd()){
+    while (!exerciseText.atEnd()) {
         line = exerciseText.readLine();
         // Splits the elements by tab
         splitLine = line.split("\t");

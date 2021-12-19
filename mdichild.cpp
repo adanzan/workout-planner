@@ -1,53 +1,3 @@
-/****************************************************************************
-**
-** Copyright (C) 2016 The Qt Company Ltd.
-** Contact: https://www.qt.io/licensing/
-**
-** This file is part of the examples of the Qt Toolkit.
-**
-** $QT_BEGIN_LICENSE:BSD$
-** Commercial License Usage
-** Licensees holding valid commercial Qt licenses may use this file in
-** accordance with the commercial license agreement provided with the
-** Software or, alternatively, in accordance with the terms contained in
-** a written agreement between you and The Qt Company. For licensing terms
-** and conditions see https://www.qt.io/terms-conditions. For further
-** information use the contact form at https://www.qt.io/contact-us.
-**
-** BSD License Usage
-** Alternatively, you may use this file under the terms of the BSD license
-** as follows:
-**
-** "Redistribution and use in source and binary forms, with or without
-** modification, are permitted provided that the following conditions are
-** met:
-**   * Redistributions of source code must retain the above copyright
-**     notice, this list of conditions and the following disclaimer.
-**   * Redistributions in binary form must reproduce the above copyright
-**     notice, this list of conditions and the following disclaimer in
-**     the documentation and/or other materials provided with the
-**     distribution.
-**   * Neither the name of The Qt Company Ltd nor the names of its
-**     contributors may be used to endorse or promote products derived
-**     from this software without specific prior written permission.
-**
-**
-** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
-**
-** $QT_END_LICENSE$
-**
-****************************************************************************/
-
 #include <QtWidgets>
 #include <QPixmap>
 
@@ -61,14 +11,10 @@
 
 using namespace std;
 
-// Constant values that will be used in setting the data on the muscles being worked
-//TODO: Add into enum in header
-const int PRIMARY = Qt::UserRole;
-const int SECONDARY = Qt::UserRole + 1;
-
 // Loads the images
 void MdiChild::loadImages() {
-    int size = 200;
+    // The size of the images
+    const int size = 200;
     QImage aBench(":/images/adjustable bench.jpg");
     equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench.scaled(size, size, Qt::KeepAspectRatio));
     QImage barbell(":/images/barbell.jpg");
@@ -113,13 +59,9 @@ MdiChild::MdiChild() {
 
     loadImages();
     QLabel* label = new QLabel;
+        //Q: Do we need this?
     label->setPixmap(equipPix["Barbell"]);
     equipPixLayout->addWidget(label);
-
-
-//    QLabel* label = new QLabel;
-//    label->setPixmap(equipPix["Barbell"]);
-//    equipPixLayout->addWidget(label);
 
     // A tree widget to display the exercises
     exerciseTreeWidget = new QTreeWidget();
@@ -170,7 +112,7 @@ MdiChild::MdiChild() {
         exerciseItem->setText(0, exercise._name);
 
         //Primary Muscle Group
-        if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()){
+        if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()) {
             //TODO:Warning that the file was not read correctly, primary muscles were incorrectly entered
         } else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
 
@@ -212,7 +154,6 @@ void MdiChild::muscleSelectionChanged(int bits) {
     for (int i = exerciseTreeWidget->topLevelItemCount(); --i>=0;) {
         QTreeWidgetItem *item = exerciseTreeWidget->topLevelItem(i);
         int exerciseBits = item->data(0, PRIMARY).toInt() | item->data(0, SECONDARY).toInt();
-
         // Set the exercises that don't work the muscle to hidden
         // Also, show everything if nothing is selected
         item->setHidden(bits && !(bits & exerciseBits));
@@ -231,7 +172,6 @@ void MdiChild::buttonAnalyzeRoutineClicked() {
     colorBits[0] = ~0;
 
     // Loops through the routineListWidget
-    qDebug() << routineListWidget->count();
     for (int i = 0; i < routineListWidget->count(); i++) {
         QListWidgetItem *routineItem = routineListWidget->item(i);
         // Loops through the colorBit and adds the primary bits
@@ -262,7 +202,6 @@ void MdiChild::buttonAnalyzeRoutineClicked() {
             if (hue > 2.0 / 3.0) hue = 5.0 / 6.0;
             color = QColor::fromHsvF(hue, 1.0, 1.0);
         }
-//        qDebug() << color << MuscleEncoding::decodeMuscleGroup(colorBits[i]);
         muscleMapWidget->setMuscleGroupBaseColors(colorBits[i], color);
     }
 }
