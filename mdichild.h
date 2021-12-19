@@ -99,7 +99,6 @@ private:
 
     void loadImages();
 
-
     QString curFile;
     bool isUntitled;
 

@@ -4,6 +4,8 @@
 #include "mdichild.h"
 #include "muscleencoding.h"
 #include "exercise.h"
+#include <QPrinter>
+#include <QPrintDialog>
 
 #include "musclemap.h"
 
@@ -39,6 +41,8 @@ void MdiChild::loadImages() {
     equipPix["Hip Thrust Machine"] = QPixmap::fromImage(hThrust.scaled(size, size, Qt::KeepAspectRatio));
     QImage lPull(":/images/lat-pulldown.jpg");
     equipPix["Lat Pulldown Machine"] = QPixmap::fromImage(lPull.scaled(size, size, Qt::KeepAspectRatio));
+    QImage kBell(":/images/kettlebell.jpg");
+    equipPix["Kettlebells"] = QPixmap::fromImage(kBell.scaled(size, size, Qt::KeepAspectRatio));
     QImage pBar(":/images/pull up bar.jpg");
     equipPix["Pull Up Bar"] = QPixmap::fromImage(pBar.scaled(size, size, Qt::KeepAspectRatio));
     QImage qExt(":/images/quad extension machine.jpg");
@@ -56,12 +60,7 @@ MdiChild::MdiChild() {
 
     equipPixLayout = new QVBoxLayout();
     mainLayout->addLayout(equipPixLayout);
-
     loadImages();
-    QLabel* label = new QLabel;
-        //Q: Do we need this?
-    label->setPixmap(equipPix["Barbell"]);
-    equipPixLayout->addWidget(label);
 
     // A tree widget to display the exercises
     exerciseTreeWidget = new QTreeWidget();
@@ -146,7 +145,23 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
     muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, PRIMARY).toInt(), Qt::red);
     muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, SECONDARY).toInt(), Qt::yellow);
 
-    if (parentItem) {}
+    if (parentItem) {
+        QString thisEquipment = current->text(0);
+        QLayoutItem *child;
+        while((child = equipPixLayout->takeAt(0))){
+            delete child->widget();
+            delete child;
+        }
+        for(auto equipment = equipPix.begin(); equipment != equipPix.end(); ++equipment){
+
+            if(thisEquipment.contains(equipment.key())){
+                qDebug()<<equipment.key();
+                QLabel* label = new QLabel;
+                label->setPixmap(equipPix[equipment.key()]);
+                equipPixLayout->addWidget(label);
+            }
+        }
+    }
 }
 
 void MdiChild::muscleSelectionChanged(int bits) {
@@ -161,7 +176,50 @@ void MdiChild::muscleSelectionChanged(int bits) {
 }
 
 // Prints the routine
-void MdiChild::buttonPrintRoutineClicked() {}
+void MdiChild::buttonPrintRoutineClicked() {
+    QString html;
+    QTextStream out (&html);
+    out << "<!DOCTYPE HTML> <html> <head> <style>";
+    out << "table, th, td {";
+    out << "border: 1px solid black";
+    out << "}";
+    out << "th, td {padding: 15px;}";
+    out << "</style> </head>";
+    out << "<body>";
+    out << "<h1>Workout Program</h1>";
+    out << "<table width=100%>";
+    out << "<tr>";
+    out << "<th>Exercise</th> <th>Sets</th> <th>Reps</th>";
+    out << "</tr>";
+    int n = routineListWidget->count();
+    for (int i = 0; i < n; ++i){
+        QString exercise = routineListWidget->item(i)->text();
+        out << "<tr> <td>" << exercise << "</td> <td> &nbsp; </td> <td> &nbsp; </td> </tr>";
+    }
+    out << "</table> ";
+    //out << "<button target=\"blank\" style=\"cursor: pointer\" onclick=\"window.print();\">Print</button>";
+    //out << "<a titlt=\"print screen\" alt=\"print screen\" onclick=\"window.print();\"target\"=_blank\" style=\"cursor:pointer;\">print button</a>";
+    //out << "<div> <type=\"button\" onClick=\"window.print()\"> Print this page </button> </div>";
+    out << "</body> </html>";
+    QTextDocument *document = new QTextDocument();
+    document->setHtml(html);
+    QTextEdit *edit = new QTextEdit();
+    edit->setHtml(html);
+    edit->show();
+    QPrinter printer(QPrinter::HighResolution);
+    QPrintDialog printDialog(&printer);
+    if (printDialog.exec() == QDialog::Accepted){
+        QPainter painter(&printer);
+        document->documentLayout()->setPaintDevice(painter.device());
+        document->drawContents(&painter);
+    }
+    /*printer.setOutputFormat(QPrinter::PdfFormat);
+    printer.setOutputFileName("test.pdf");
+    QPainter painter(&printer);
+    painter.setRenderHint(QPainter::Antialiasing);
+    document->drawContents(&painter);*/
+    delete document;
+}
 
 // Analyzes the routine (heatmap)
 void MdiChild::buttonAnalyzeRoutineClicked() {
