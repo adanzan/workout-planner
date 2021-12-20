@@ -1,3 +1,4 @@
+// A custom defined QTreeWidget used to modify the functionality of the return key
 #ifndef MYTREEWIDGET_H
 #define MYTREEWIDGET_H
 

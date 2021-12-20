@@ -83,7 +83,7 @@ MdiChild::MdiChild() {
     editRoutineButtonLayout->addWidget(buttonAddExercise);
     connect(buttonAddExercise, &QPushButton::clicked, this, &MdiChild::buttonAddExerciseClicked);
 
-    // Button to remove
+    // Button to remove an exercise
     buttonRemoveExercise = new QPushButton("Remove");
     editRoutineButtonLayout->addWidget(buttonRemoveExercise);
     connect(buttonRemoveExercise, &QPushButton::clicked, this, &MdiChild::buttonRemoveExerciseClicked);
@@ -118,7 +118,7 @@ MdiChild::MdiChild() {
 
         //Primary Muscle Group
         if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()) {
-            QMessageBox::warning(this, tr("MDI"), "File read incorrectly, primary muscle group is empty for an exercise");
+            QMessageBox::warning(this, tr("Workout Planner"), "File read incorrectly, primary muscle group is empty for an exercise");
         } else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
 
         //Secondary Muscle Group
@@ -154,17 +154,18 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
     // Changes the selected item on the routine widget
     routineListSelectionChanged();
 
+    // If the item is an equipment
     if (parentItem) {
         QString thisEquipment = current->text(0);
         QLayoutItem *child;
-        while((child = equipPixLayout->takeAt(0))){
+        while ((child = equipPixLayout->takeAt(0))) {
             delete child->widget();
             delete child;
         }
 
         // Displays the picture for the equipment
         for (auto equipment = equipPix.begin(); equipment != equipPix.end(); ++equipment) {
-            if(thisEquipment.contains(equipment.key())){
+            if (thisEquipment.contains(equipment.key())) {
                 qDebug()<<equipment.key();
                 QLabel* label = new QLabel;
                 label->setPixmap(equipPix[equipment.key()]);
@@ -174,6 +175,7 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
     }
 }
 
+// Changes the muscle selection based on the muscle map
 void MdiChild::muscleSelectionChanged(int bits) {
     // Loops through the tree widget
     for (int i = exerciseTreeWidget->topLevelItemCount(); --i>=0;) {
@@ -188,42 +190,35 @@ void MdiChild::muscleSelectionChanged(int bits) {
 // Prints the routine
 void MdiChild::buttonPrintRoutineClicked() {
     int n = routineListWidget->count();
-    //QTextDocument *document = new QTextDocument();
     //Creates the preset formatting for the table
     QTextTableFormat format;
     format.setCellPadding(50);
     format.setHeight(3000/(n+1));
     format.setWidth(2000);
     QTextEdit *edit = new QTextEdit();
-    //QTextBrowser *browser = new QTextBrowser;
     QTextCursor cursor(edit->textCursor());
     cursor.movePosition(QTextCursor::Start);
+
     //Creates the table to print
     QTextTable *table = cursor.insertTable(n+1, 3, format);
     table->cellAt(0, 0).firstCursorPosition().insertText("Exercise");
-    for(int i = 0; i < n; i++){
+    for (int i = 0; i < n; i++) {
         QString exercise = routineListWidget->item(i)->text();
         table->cellAt(i+1, 0).firstCursorPosition().insertText(exercise);
     }
     table->cellAt(0, 1).firstCursorPosition().insertText("Sets");
     table->cellAt(0, 2).firstCursorPosition().insertText("Reps");
     edit->show();
+
     //Prints the table
     QPrinter printer(QPrinter::HighResolution);
     QPrintDialog printDialog(&printer);
     if (printDialog.exec() == QDialog::Accepted){
         QPainter painter(&printer);
-        //browser->render(&painter);
         edit->document()->documentLayout()->setPaintDevice(painter.device());
         edit->document()->drawContents(&painter);
     }
-    /*printer.setOutputFormat(QPrinter::PdfFormat);
-    printer.setOutputFileName("test.pdf");
-    QPainter painter(&printer);
-    painter.setRenderHint(QPainter::Antialiasing);
-    document->drawContents(&painter);*/
     delete edit;
-    //delete document;
 }
 
 // Analyzes the routine and colors the heatmap of the muscles worked.
@@ -231,7 +226,7 @@ void MdiChild::buttonAnalyzeRoutineClicked() {
     int colorBitMaxValue = 2 * (routineListWidget->count()) + 1;
     // A vector that stores which muscles should be colored?
     vector<int> colorBits(colorBitMaxValue, 0);
-    // Sets all the muscles worked to 0?
+    // Sets the rest of the muscles 0
     colorBits[0] = ~0;
 
     // Loops through the routineListWidget
@@ -277,17 +272,20 @@ void MdiChild::buttonAddExerciseClicked() {
     // If the current item has a parent, set current item to its parent
     if (currentItem->parent()) currentItem = currentItem->parent();
 
+    // Adds the QListWidgetItem
     tempListItem->setText(currentItem->text(0));
     tempListItem->setData(PRIMARY, currentItem->data(0, PRIMARY));
     tempListItem->setData(SECONDARY, currentItem->data(0, SECONDARY));
     routineListWidget->insertItem(routineListWidget->count(), tempListItem);
 }
 
+// Changes the selection of the list based on the tree widget and other factors
 void MdiChild::routineListSelectionChanged() {
     QTreeWidgetItem *currentItem = exerciseTreeWidget->currentItem();
     // If the current item has a parent, set current item to its parent
     if (currentItem->parent()) currentItem = currentItem->parent();
 
+    // Loops through the listWidget and selects the last element that is selected in the treeWidget
     for (int i = 0; i < routineListWidget->count(); i++) {
         QListWidgetItem *routineItem = routineListWidget->item(i);
         if (currentItem->text(0) == routineItem->text()) routineItem->setSelected(1);

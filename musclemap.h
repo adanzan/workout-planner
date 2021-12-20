@@ -1,3 +1,4 @@
+// This class is used to render the diagram of the musclemap
 #ifndef MUSCLEMAP_H
 #define MUSCLEMAP_H
 

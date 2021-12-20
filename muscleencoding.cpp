@@ -1,4 +1,3 @@
-// A utility class used to convert muscle encodings to strings and vice versa
 #include "muscleencoding.h"
 #include <QStringList>
 
@@ -49,7 +48,6 @@ int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){
             coding |= Hip_Abductor;
         else if (muscle == "Hip Adductor")
             coding |= Hip_Adductor;
-
         // Groups of muscles are bundled together
         else if (muscle == "Deltoids" || muscle == "Shoulders")
             coding |= Deltoids;

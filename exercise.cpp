@@ -25,6 +25,7 @@ void Exercise::readExerciseList() {
     // The file path of the list of exercises
     const QString EXERCISE_LIST_FILE_PATH = ":/data/exercise_list.tsv";
 
+    // Opens the file specified by the file path
     QFile fileExerciseList(EXERCISE_LIST_FILE_PATH);
 
     // Warns if the file was unable to be opened.

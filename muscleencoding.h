@@ -1,3 +1,5 @@
+// This class holds the definition of the muscle groups as bits
+    // This class also holds two methods to decode and encode from muscle groups to bits
 #ifndef MUSCLEENCODING_H
 #define MUSCLEENCODING_H
 
@@ -29,7 +31,7 @@ public:
         Bit_Hip_Adductor,
         Bit_Neck,
 
-        // Used to count the number of bits above
+        // Used to count the number of bits that are used above
         Bit_Count,
 
         Front_Deltoids = 1 << Bit_Front_Deltoids,

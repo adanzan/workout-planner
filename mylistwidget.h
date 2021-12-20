@@ -1,3 +1,4 @@
+// A custom defined QListWidget used to modify the functionality of the backspace key
 #ifndef MYLISTWIDGET_H
 #define MYLISTWIDGET_H
 

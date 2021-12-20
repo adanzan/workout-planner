@@ -54,8 +54,7 @@
 #include "mdichild.h"
 
 MainWindow::MainWindow()
-    : mdiArea(new QMdiArea)
-{
+    : mdiArea(new QMdiArea) {
     mdiArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     mdiArea->setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
     setCentralWidget(mdiArea);
@@ -68,12 +67,11 @@ MainWindow::MainWindow()
 
     readSettings();
 
-    setWindowTitle(tr("MDI"));
+    setWindowTitle(tr("Workout Planner"));
     setUnifiedTitleAndToolBarOnMac(true);
 }
 
-void MainWindow::closeEvent(QCloseEvent *event)
-{
+void MainWindow::closeEvent(QCloseEvent *event) {
     mdiArea->closeAllSubWindows();
     if (mdiArea->currentSubWindow()) {
         event->ignore();
@@ -83,22 +81,19 @@ void MainWindow::closeEvent(QCloseEvent *event)
     }
 }
 
-void MainWindow::newFile()
-{
+void MainWindow::newFile() {
     MdiChild *child = createMdiChild();
     child->newFile();
     child->show();
 }
 
-void MainWindow::open()
-{
+void MainWindow::open() {
     const QString fileName = QFileDialog::getOpenFileName(this);
     if (!fileName.isEmpty())
         openFile(fileName);
 }
 
-bool MainWindow::openFile(const QString &fileName)
-{
+bool MainWindow::openFile(const QString &fileName) {
     if (QMdiSubWindow *existing = findMdiChild(fileName)) {
         mdiArea->setActiveSubWindow(existing);
         return true;
@@ -109,8 +104,7 @@ bool MainWindow::openFile(const QString &fileName)
     return succeeded;
 }
 
-bool MainWindow::loadFile(const QString &fileName)
-{
+bool MainWindow::loadFile(const QString &fileName) {
     MdiChild *child = createMdiChild();
     const bool succeeded = child->loadFile(fileName);
     if (succeeded)
@@ -124,8 +118,7 @@ bool MainWindow::loadFile(const QString &fileName)
 static inline QString recentFilesKey() { return QStringLiteral("recentFileList"); }
 static inline QString fileKey() { return QStringLiteral("file"); }
 
-static QStringList readRecentFiles(QSettings &settings)
-{
+static QStringList readRecentFiles(QSettings &settings) {
     QStringList result;
     const int count = settings.beginReadArray(recentFilesKey());
     for (int i = 0; i < count; ++i) {
@@ -136,8 +129,7 @@ static QStringList readRecentFiles(QSettings &settings)
     return result;
 }
 
-static void writeRecentFiles(const QStringList &files, QSettings &settings)
-{
+static void writeRecentFiles(const QStringList &files, QSettings &settings) {
     const int count = files.size();
     settings.beginWriteArray(recentFilesKey());
     for (int i = 0; i < count; ++i) {
@@ -147,16 +139,14 @@ static void writeRecentFiles(const QStringList &files, QSettings &settings)
     settings.endArray();
 }
 
-bool MainWindow::hasRecentFiles()
-{
+bool MainWindow::hasRecentFiles() {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     const int count = settings.beginReadArray(recentFilesKey());
     settings.endArray();
     return count > 0;
 }
 
-void MainWindow::prependToRecentFiles(const QString &fileName)
-{
+void MainWindow::prependToRecentFiles(const QString &fileName) {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
     const QStringList oldRecentFiles = readRecentFiles(settings);
@@ -169,14 +159,12 @@ void MainWindow::prependToRecentFiles(const QString &fileName)
     setRecentFilesVisible(!recentFiles.isEmpty());
 }
 
-void MainWindow::setRecentFilesVisible(bool visible)
-{
+void MainWindow::setRecentFilesVisible(bool visible) {
     recentFileSubMenuAct->setVisible(visible);
     recentFileSeparator->setVisible(visible);
 }
 
-void MainWindow::updateRecentFileActions()
-{
+void MainWindow::updateRecentFileActions() {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
 
     const QStringList recentFiles = readRecentFiles(settings);
@@ -192,20 +180,17 @@ void MainWindow::updateRecentFileActions()
         recentFileActs[i]->setVisible(false);
 }
 
-void MainWindow::openRecentFile()
-{
+void MainWindow::openRecentFile() {
     if (const QAction *action = qobject_cast<const QAction *>(sender()))
         openFile(action->data().toString());
 }
 
-void MainWindow::save()
-{
+void MainWindow::save() {
     if (activeMdiChild() && activeMdiChild()->save())
         statusBar()->showMessage(tr("File saved"), 2000);
 }
 
-void MainWindow::saveAs()
-{
+void MainWindow::saveAs() {
     MdiChild *child = activeMdiChild();
     if (child && child->saveAs()) {
         statusBar()->showMessage(tr("File saved"), 2000);
@@ -213,15 +198,13 @@ void MainWindow::saveAs()
     }
 }
 
-void MainWindow::about()
-{
-   QMessageBox::about(this, tr("About MDI"),
-            tr("The <b>MDI</b> example demonstrates how to write multiple "
-               "document interface applications using Qt."));
+void MainWindow::about() {
+   QMessageBox::about(this, tr("Workout Planner"),
+            tr("The <b>Workout Planner</b> allows the user to construct "
+               "a workout routine to their own preferences."));
 }
 
-void MainWindow::updateMenus()
-{
+void MainWindow::updateMenus() {
     bool hasMdiChild = (activeMdiChild() != nullptr);
     saveAct->setEnabled(hasMdiChild);
     saveAsAct->setEnabled(hasMdiChild);
@@ -234,8 +217,7 @@ void MainWindow::updateMenus()
     windowMenuSeparatorAct->setVisible(hasMdiChild);
 }
 
-void MainWindow::updateWindowMenu()
-{
+void MainWindow::updateWindowMenu() {
     windowMenu->clear();
     windowMenu->addAction(closeAct);
     windowMenu->addAction(closeAllAct);
@@ -270,16 +252,14 @@ void MainWindow::updateWindowMenu()
     }
 }
 
-MdiChild *MainWindow::createMdiChild()
-{
+MdiChild *MainWindow::createMdiChild() {
     MdiChild *child = new MdiChild;
     mdiArea->addSubWindow(child);
 
     return child;
 }
 
-void MainWindow::createActions()
-{
+void MainWindow::createActions() {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileToolBar = addToolBar(tr("File"));
 
@@ -387,13 +367,11 @@ void MainWindow::createActions()
     aboutQtAct->setStatusTip(tr("Show the Qt library's About box"));
 }
 
-void MainWindow::createStatusBar()
-{
+void MainWindow::createStatusBar() {
     statusBar()->showMessage(tr("Ready"));
 }
 
-void MainWindow::readSettings()
-{
+void MainWindow::readSettings() {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     const QByteArray geometry = settings.value("geometry", QByteArray()).toByteArray();
     if (geometry.isEmpty()) {
@@ -406,21 +384,18 @@ void MainWindow::readSettings()
     }
 }
 
-void MainWindow::writeSettings()
-{
+void MainWindow::writeSettings() {
     QSettings settings(QCoreApplication::organizationName(), QCoreApplication::applicationName());
     settings.setValue("geometry", saveGeometry());
 }
 
-MdiChild *MainWindow::activeMdiChild() const
-{
+MdiChild *MainWindow::activeMdiChild() const {
     if (QMdiSubWindow *activeSubWindow = mdiArea->activeSubWindow())
         return qobject_cast<MdiChild *>(activeSubWindow->widget());
     return nullptr;
 }
 
-QMdiSubWindow *MainWindow::findMdiChild(const QString &fileName) const
-{
+QMdiSubWindow *MainWindow::findMdiChild(const QString &fileName) const {
     QString canonicalFilePath = QFileInfo(fileName).canonicalFilePath();
 
     const QList<QMdiSubWindow *> subWindows = mdiArea->subWindowList();
@@ -432,8 +407,7 @@ QMdiSubWindow *MainWindow::findMdiChild(const QString &fileName) const
     return nullptr;
 }
 
-void MainWindow::switchLayoutDirection()
-{
+void MainWindow::switchLayoutDirection() {
     if (layoutDirection() == Qt::LeftToRight)
         QGuiApplication::setLayoutDirection(Qt::RightToLeft);
     else
