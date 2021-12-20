@@ -51,8 +51,8 @@
 #ifndef MDICHILD_H
 #define MDICHILD_H
 
-#include <QTreeWidget>
-#include <QListWidget>
+#include "mytreewidget.h"
+#include "mylistwidget.h"
 #include <QGraphicsItem>
 #include <QPushButton>
 #include "musclemap.h"
@@ -104,9 +104,9 @@ private:
 
     QMap<QString, QPixmap> equipPix;
     QVBoxLayout *equipPixLayout;
-    QTreeWidget *exerciseTreeWidget;
+    MyTreeWidget *exerciseTreeWidget;
     QVBoxLayout *routineLayout;
-    QListWidget *routineListWidget;
+    MyListWidget *routineListWidget;
     MuscleMap *muscleMapWidget;
 
 

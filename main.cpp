@@ -5,7 +5,6 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
-#include <QTreeWidget>
 
 #include "exercise.h"
 #include "mainwindow.h"
