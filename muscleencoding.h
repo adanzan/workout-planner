@@ -29,7 +29,7 @@ public:
         Bit_Hip_Adductor,
         Bit_Neck,
 
-        // How many bits I have
+        // Used to count the number of bits above
         Bit_Count,
 
         Front_Deltoids = 1 << Bit_Front_Deltoids,

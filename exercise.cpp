@@ -1,5 +1,4 @@
 #include "exercise.h"
-//Q: Include here or in header?
 #include "muscleencoding.h"
 
 #include <QFile>
@@ -21,21 +20,22 @@ Exercise::Exercise(QString name, quint64 primary, quint64 secondary, QStringList
     _equipmentList = equipmentList;
 }
 
+// Reads the file of the exercises and populates the exercise list.
 void Exercise::readExerciseList() {
     // The file path of the list of exercises
     const QString EXERCISE_LIST_FILE_PATH = ":/data/exercise_list.tsv";
 
     QFile fileExerciseList(EXERCISE_LIST_FILE_PATH);
+
     // Warns if the file was unable to be opened.
     if (!fileExerciseList.open(QIODevice::ReadOnly)) {
-        //Q: Why error here
-//        QMessageBox::warning(this, "Error", QString("Was not able to open the exercise list file"));
+        QMessageBox::warning(nullptr, "Error", "Was not able to open the exercise list file");
         return;
     }
 
     // Populates the exercise list from the file
     QTextStream exerciseText(&fileExerciseList);
-    // A temporary variable created for each line
+    // Temporary variable created for each line
     QString line;
     // A QStringList of the line, created by splitting "line" by tabs
     QStringList splitLine;

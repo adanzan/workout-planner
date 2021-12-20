@@ -69,7 +69,6 @@ MdiChild::MdiChild() {
     exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
 
     // Buttons to add / remove exercises to the routine
-    //TODO: In the future, consider changing this out so that it works for arrow keys; and get rid of the button
     QVBoxLayout *editRoutineButtonLayout = new QVBoxLayout();
     mainLayout->addLayout(editRoutineButtonLayout);
 
@@ -112,7 +111,7 @@ MdiChild::MdiChild() {
 
         //Primary Muscle Group
         if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()) {
-            //TODO:Warning that the file was not read correctly, primary muscles were incorrectly entered
+            QMessageBox::warning(this, tr("MDI"), "File read incorrectly, primary muscle group is empty for an exercise");
         } else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
 
         //Secondary Muscle Group
@@ -144,7 +143,7 @@ void MdiChild::arrowKeysPressed(QKeyEvent *event) {
 }
 
 // Reacts to the changes of selection on the tree widget
-void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
+void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *) {
     // Changes the color for all bits back to gray
     muscleMapWidget->setMuscleGroupBaseColors(~0, Qt::gray);
 
@@ -154,6 +153,15 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
     muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, PRIMARY).toInt(), Qt::red);
     muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, SECONDARY).toInt(), Qt::yellow);
 
+    // Changes the selected item on the routine widget
+        // TODO: Working, but not with the remove exercise button
+    for (int i = 0; i < routineListWidget->count(); i++) {
+        QListWidgetItem *routineItem = routineListWidget->item(i);
+        if (current->text(0) == routineItem->text()) {
+            routineItem->setSelected(1);
+        }
+    }
+
     if (parentItem) {
         QString thisEquipment = current->text(0);
         QLayoutItem *child;
@@ -161,6 +169,7 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
             delete child->widget();
             delete child;
         }
+        // Displays the picture for the equipment
         for(auto equipment = equipPix.begin(); equipment != equipPix.end(); ++equipment){
 
             if(thisEquipment.contains(equipment.key())){
@@ -230,7 +239,7 @@ void MdiChild::buttonPrintRoutineClicked() {
     delete document;
 }
 
-// Analyzes the routine (heatmap)
+// Analyzes the routine and colors the heatmap of the muscles worked.
 void MdiChild::buttonAnalyzeRoutineClicked() {
     int colorBitMaxValue = 2 * (routineListWidget->count()) + 1;
     // A vector that stores which muscles should be colored?

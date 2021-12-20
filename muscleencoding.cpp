@@ -1,7 +1,6 @@
+// A utility class used to convert muscle encodings to strings and vice versa
 #include "muscleencoding.h"
 #include <QStringList>
-
-// Utility class, used to convert muscle encodings to strings and vice versa
 
 // Converts a QStringList of Muscle Groups to encodings
 int MuscleEncoding::encodeMuscleGroup(const QStringList &muscleGroups){

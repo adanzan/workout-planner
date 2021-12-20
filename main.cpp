@@ -1,7 +1,3 @@
-//CS318
-//Workout Project
-//Created by Danzan and Will
-
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
@@ -13,7 +9,6 @@
 #include "iostream"
 
 using namespace std;
-
 
 int main(int argc, char *argv[]) {
     Q_INIT_RESOURCE(mdi);
@@ -30,7 +25,6 @@ int main(int argc, char *argv[]) {
     parser.process(app);
 
     Exercise::readExerciseList();
-
 
     MainWindow mainWin;
     const QStringList posArgs = parser.positionalArguments();
