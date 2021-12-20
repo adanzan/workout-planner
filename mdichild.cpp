@@ -1,8 +1,13 @@
+#include <QTextLength>
+#include <QTextBrowser>
+#include <QTextTableFormat>
 #include <QtWidgets>
 #include <QPixmap>
 #include <QPrinter>
 #include <QPrintDialog>
 #include <QKeyEvent>
+#include <QVector>
+
 
 #include "mdichild.h"
 #include "muscleencoding.h"
@@ -63,10 +68,11 @@ MdiChild::MdiChild() {
     loadImages();
 
     // A tree widget to display the exercises
-    exerciseTreeWidget = new QTreeWidget();
+    exerciseTreeWidget = new MyTreeWidget();
     mainLayout->addWidget(exerciseTreeWidget);
     exerciseTreeWidget->setColumnCount(3);
     exerciseTreeWidget->setHeaderLabels(QStringList() << "Exercise" << "Primary" << "Secondary");
+    connect(exerciseTreeWidget, &MyTreeWidget::enterKeyPressed, this, &MdiChild::buttonAddExerciseClicked);
 
     // Buttons to add / remove exercises to the routine
     QVBoxLayout *editRoutineButtonLayout = new QVBoxLayout();
@@ -84,7 +90,8 @@ MdiChild::MdiChild() {
 
     // Widget to construct the routine
     routineLayout = new QVBoxLayout();
-    routineListWidget = new QListWidget();
+    routineListWidget = new MyListWidget();
+    connect(routineListWidget, &MyListWidget::backspaceKeyPressed, this, &MdiChild::buttonRemoveExerciseClicked);
     routineLayout->addWidget(routineListWidget);
     mainLayout->addLayout(routineLayout);
 
@@ -139,7 +146,10 @@ void MdiChild::arrowKeysPressed(QKeyEvent *event) {
         buttonRemoveExerciseClicked();
         event->accept();
     }
-    if (event->key() == Qt::Key_Right) buttonAddExerciseClicked();
+    if (event->key() == Qt::Key_Enter){
+        buttonAddExerciseClicked();
+        event->accept();
+    }
 }
 
 // Reacts to the changes of selection on the tree widget
@@ -194,48 +204,43 @@ void MdiChild::muscleSelectionChanged(int bits) {
 
 // Prints the routine
 void MdiChild::buttonPrintRoutineClicked() {
-    QString html;
-    QTextStream out (&html);
-    out << "<!DOCTYPE HTML> <html> <head> <style>";
-    out << "table, th, td {";
-    out << "border: 1px solid black";
-    out << "}";
-    out << "th, td {padding: 15px;}";
-    out << "</style> </head>";
-    out << "<body>";
-    out << "<h1>Workout Program</h1>";
-    out << "<table width=100%>";
-    out << "<tr>";
-    out << "<th>Exercise</th> <th>Sets</th> <th>Reps</th>";
-    out << "</tr>";
     int n = routineListWidget->count();
-    for (int i = 0; i < n; ++i){
-        QString exercise = routineListWidget->item(i)->text();
-        out << "<tr> <td>" << exercise << "</td> <td> &nbsp; </td> <td> &nbsp; </td> </tr>";
-    }
-    out << "</table> ";
-    //out << "<button target=\"blank\" style=\"cursor: pointer\" onclick=\"window.print();\">Print</button>";
-    //out << "<a titlt=\"print screen\" alt=\"print screen\" onclick=\"window.print();\"target\"=_blank\" style=\"cursor:pointer;\">print button</a>";
-    //out << "<div> <type=\"button\" onClick=\"window.print()\"> Print this page </button> </div>";
-    out << "</body> </html>";
-    QTextDocument *document = new QTextDocument();
-    document->setHtml(html);
+    //QTextDocument *document = new QTextDocument();
+    //Creates the preset formatting for the table
+    QTextTableFormat format;
+    format.setCellPadding(50);
+    format.setHeight(3000/(n+1));
+    format.setWidth(2000);
     QTextEdit *edit = new QTextEdit();
-    edit->setHtml(html);
+    //QTextBrowser *browser = new QTextBrowser;
+    QTextCursor cursor(edit->textCursor());
+    cursor.movePosition(QTextCursor::Start);
+    //Creates the table to print
+    QTextTable *table = cursor.insertTable(n+1, 3, format);
+    table->cellAt(0, 0).firstCursorPosition().insertText("Exercise");
+    for(int i = 0; i < n; i++){
+        QString exercise = routineListWidget->item(i)->text();
+        table->cellAt(i+1, 0).firstCursorPosition().insertText(exercise);
+    }
+    table->cellAt(0, 1).firstCursorPosition().insertText("Sets");
+    table->cellAt(0, 2).firstCursorPosition().insertText("Reps");
     edit->show();
+    //Prints the table
     QPrinter printer(QPrinter::HighResolution);
     QPrintDialog printDialog(&printer);
     if (printDialog.exec() == QDialog::Accepted){
         QPainter painter(&printer);
-        document->documentLayout()->setPaintDevice(painter.device());
-        document->drawContents(&painter);
+        //browser->render(&painter);
+        edit->document()->documentLayout()->setPaintDevice(painter.device());
+        edit->document()->drawContents(&painter);
     }
     /*printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName("test.pdf");
     QPainter painter(&printer);
     painter.setRenderHint(QPainter::Antialiasing);
     document->drawContents(&painter);*/
-    delete document;
+    delete edit;
+    //delete document;
 }
 
 // Analyzes the routine and colors the heatmap of the muscles worked.
@@ -306,11 +311,9 @@ void MdiChild::buttonRemoveExerciseClicked() {
 
 void MdiChild::newFile() {
     static int sequenceNumber = 1;
-
     isUntitled = true;
     curFile = tr("document%1.txt").arg(sequenceNumber++);
     setWindowTitle(curFile + "[*]");
-
 }
 
 bool MdiChild::loadFile(const QString &fileName) {
@@ -327,32 +330,25 @@ bool MdiChild::loadFile(const QString &fileName) {
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
     // Read file here
     QGuiApplication::restoreOverrideCursor();
-
     setCurrentFile(fileName);
-
     return true;
 }
 
 bool MdiChild::save() {
-    if (isUntitled) {
-        return saveAs();
-    } else {
-        return saveFile(curFile);
-    }
+    if (isUntitled) return saveAs();
+        else return saveFile(curFile);
 }
 
 bool MdiChild::saveAs() {
     QString fileName = QFileDialog::getSaveFileName(this, tr("Save As"),
                                                     curFile);
-    if (fileName.isEmpty())
-        return false;
+    if (fileName.isEmpty()) return false;
 
     return saveFile(fileName);
 }
 
 bool MdiChild::saveFile(const QString &fileName) {
     QString errorMessage;
-
     QGuiApplication::setOverrideCursor(Qt::WaitCursor);
     QSaveFile file(fileName);
     if (file.open(QFile::WriteOnly | QFile::Text)) {
@@ -367,7 +363,6 @@ bool MdiChild::saveFile(const QString &fileName) {
                 .arg(QDir::toNativeSeparators(fileName), file.errorString());
     }
     QGuiApplication::restoreOverrideCursor();
-
     if (!errorMessage.isEmpty()) {
         QMessageBox::warning(this, tr("MDI"), errorMessage);
         return false;
@@ -382,19 +377,15 @@ QString MdiChild::userFriendlyCurrentFile() {
 }
 
 void MdiChild::closeEvent(QCloseEvent *event) {
-    if (maybeSave()) {
-        event->accept();
-    } else {
-        event->ignore();
-    }
+    if (maybeSave()) event->accept();
+    else event->ignore();
 }
 
 void MdiChild::documentWasModified() { }
 
 bool MdiChild::maybeSave() {
     // If something has been modified
-    if (false)
-        return true;
+    if (false) return true;
     const QMessageBox::StandardButton ret
             = QMessageBox::warning(this, tr("MDI"),
                                    tr("'%1' has been modified.\n"
@@ -403,12 +394,9 @@ bool MdiChild::maybeSave() {
                                    QMessageBox::Save | QMessageBox::Discard
                                    | QMessageBox::Cancel);
     switch (ret) {
-    case QMessageBox::Save:
-        return save();
-    case QMessageBox::Cancel:
-        return false;
-    default:
-        break;
+    case QMessageBox::Save: return save();
+    case QMessageBox::Cancel: return false;
+    default: break;
     }
     return true;
 }

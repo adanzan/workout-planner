@@ -6,6 +6,8 @@ HEADERS       = mainwindow.h \
                 mdichild.h \
                 muscleencoding.h \
                 musclemap.h \
+                mylistwidget.h \
+                mytreewidget.h \
                 qgraphicsmusclegroup.h
 SOURCES       = main.cpp \
                 exercise.cpp \
@@ -13,6 +15,8 @@ SOURCES       = main.cpp \
                 mdichild.cpp \
                 muscleencoding.cpp \
                 musclemap.cpp \
+                mylistwidget.cpp \
+                mytreewidget.cpp \
                 qgraphicsmusclegroup.cpp
 RESOURCES     = mdi.qrc
 
