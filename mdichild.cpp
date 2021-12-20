@@ -141,18 +141,6 @@ MdiChild::MdiChild() {
     connect(muscleMapWidget, &MuscleMap::selectionChanged, this, &MdiChild::muscleSelectionChanged);
 }
 
-void MdiChild::arrowKeysPressed(QKeyEvent *event) {
-    if (event->key() == Qt::Key_0) {
-        qDebug() << "Left is clicked";
-        buttonRemoveExerciseClicked();
-        event->accept();
-    }
-    if (event->key() == Qt::Key_Enter){
-        buttonAddExerciseClicked();
-        event->accept();
-    }
-}
-
 // Reacts to the changes of selection on the tree widget
 void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *previous) {
     // Changes the color for all bits back to gray
