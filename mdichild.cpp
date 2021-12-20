@@ -140,18 +140,6 @@ MdiChild::MdiChild() {
     connect(muscleMapWidget, &MuscleMap::selectionChanged, this, &MdiChild::muscleSelectionChanged);
 }
 
-void MdiChild::arrowKeysPressed(QKeyEvent *event) {
-    if (event->key() == Qt::Key_0) {
-        qDebug() << "Left is clicked";
-        buttonRemoveExerciseClicked();
-        event->accept();
-    }
-    if (event->key() == Qt::Key_Enter){
-        buttonAddExerciseClicked();
-        event->accept();
-    }
-}
-
 // Reacts to the changes of selection on the tree widget
 void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidgetItem *) {
     // Changes the color for all bits back to gray
@@ -164,12 +152,7 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
     muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, SECONDARY).toInt(), Qt::yellow);
 
     // Changes the selected item on the routine widget
-    for (int i = 0; i < routineListWidget->count(); i++) {
-        QListWidgetItem *routineItem = routineListWidget->item(i);
-        if (current->text(0) == routineItem->text()) {
-            routineItem->setSelected(1);
-        }
-    }
+    routineListSelectionChanged();
 
     if (parentItem) {
         QString thisEquipment = current->text(0);
@@ -178,9 +161,9 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
             delete child->widget();
             delete child;
         }
-        // Displays the picture for the equipment
-        for(auto equipment = equipPix.begin(); equipment != equipPix.end(); ++equipment){
 
+        // Displays the picture for the equipment
+        for (auto equipment = equipPix.begin(); equipment != equipPix.end(); ++equipment) {
             if(thisEquipment.contains(equipment.key())){
                 qDebug()<<equipment.key();
                 QLabel* label = new QLabel;
@@ -300,6 +283,17 @@ void MdiChild::buttonAddExerciseClicked() {
     routineListWidget->insertItem(routineListWidget->count(), tempListItem);
 }
 
+void MdiChild::routineListSelectionChanged() {
+    QTreeWidgetItem *currentItem = exerciseTreeWidget->currentItem();
+    // If the current item has a parent, set current item to its parent
+    if (currentItem->parent()) currentItem = currentItem->parent();
+
+    for (int i = 0; i < routineListWidget->count(); i++) {
+        QListWidgetItem *routineItem = routineListWidget->item(i);
+        if (currentItem->text(0) == routineItem->text()) routineItem->setSelected(1);
+    }
+}
+
 // Removes an exercise from the routine
 void MdiChild::buttonRemoveExerciseClicked() {
     // Removes the currently selected listWidget items.
@@ -307,6 +301,7 @@ void MdiChild::buttonRemoveExerciseClicked() {
     foreach(QListWidgetItem * item, items) {
         routineListWidget->takeItem(routineListWidget->row(item));
     }
+    routineListSelectionChanged();
 }
 
 void MdiChild::newFile() {

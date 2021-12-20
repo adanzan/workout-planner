@@ -101,6 +101,8 @@ private:
     bool isUntitled;
 
     void arrowKeysPressed(QKeyEvent *event);
+    void routineListSelectionChanged();
+
 
     QMap<QString, QPixmap> equipPix;
     QVBoxLayout *equipPixLayout;
@@ -108,6 +110,7 @@ private:
     QVBoxLayout *routineLayout;
     MyListWidget *routineListWidget;
     MuscleMap *muscleMapWidget;
+
 
 
     // Constant values that will be used in setting the data on the muscles being worked
