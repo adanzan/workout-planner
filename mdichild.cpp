@@ -154,7 +154,6 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
     muscleMapWidget->setMuscleGroupBaseColors(colorItem->data(0, SECONDARY).toInt(), Qt::yellow);
 
     // Changes the selected item on the routine widget
-        // TODO: Working, but not with the remove exercise button
     for (int i = 0; i < routineListWidget->count(); i++) {
         QListWidgetItem *routineItem = routineListWidget->item(i);
         if (current->text(0) == routineItem->text()) {
@@ -298,8 +297,11 @@ void MdiChild::buttonAddExerciseClicked() {
 
 // Removes an exercise from the routine
 void MdiChild::buttonRemoveExerciseClicked() {
-    // Removes the list widget at the current row
-    routineListWidget->takeItem(routineListWidget->currentRow());
+    // Removes the currently selected listWidget items.
+    QList<QListWidgetItem*> items = routineListWidget->selectedItems();
+    foreach(QListWidgetItem * item, items) {
+        routineListWidget->takeItem(routineListWidget->row(item));
+    }
 }
 
 void MdiChild::newFile() {
