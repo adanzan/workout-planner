@@ -8,9 +8,9 @@ A workout planner with a GUI that creates a routine based on the available equip
 
 ## Authors
 
-@fswenton
-@wbogatyrenko
-@adanzan
+[@fswenton](https://github.com/fswenton)
+[@wbogatyrenko](https://github.com/wbogatyrenko)
+[@adanzan](https://github.com/adanzan)
 
 ## Acknowledgement
 
