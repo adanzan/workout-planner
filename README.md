@@ -1,6 +1,4 @@
-# Project Title
-
-Workout Planner 
+# Workout Planner
 
 ## Description
 
