@@ -5,9 +5,7 @@
 ## Authors
 
 [@fswenton](https://github.com/fswenton)
-
 [@wbogatyrenko](https://github.com/wbogatyrenko)
-
 [@adanzan](https://github.com/adanzan)
 
 ## Acknowledgement
