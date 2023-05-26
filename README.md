@@ -1,6 +1,6 @@
 # Workout Planner
 
-> A workout planner with a GUI that creates a routine based on the available equipment, and the muscle group the user wants to include.
+A workout planner with a GUI that creates a routine based on the available equipment, and the muscle group the user wants to include.
 
 ## Features
 
@@ -20,9 +20,9 @@
 
 ## Authors
 
-[@fswenton](https://github.com/fswenton)  
-[@wbogatyrenko](https://github.com/wbogatyrenko)  
-[@adanzan](https://github.com/adanzan)  
+[adanzan](https://github.com/adanzan)  
+[fswenton](https://github.com/fswenton)  
+[wbogatyrenko](https://github.com/wbogatyrenko)  
 
 ## Acknowledgement
 
