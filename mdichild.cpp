@@ -21,39 +21,39 @@ using namespace std;
 // Loads the images
 void MdiChild::loadImages() {
     // The size of the images
-    const int size = 200;
+    const int SIZE = 200;
     QImage aBench(":/images/adjustable bench.jpg");
-    equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Adjustable Bench"] = QPixmap::fromImage(aBench.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage barbell(":/images/barbell.jpg");
-    equipPix["Barbell"] = QPixmap::fromImage(barbell.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Barbell"] = QPixmap::fromImage(barbell.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage bench(":/images/bench.jpg");
-    equipPix["Bench"] = QPixmap::fromImage(bench.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Bench"] = QPixmap::fromImage(bench.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage cabMachine(":/images/cable machine.jpg");
-    equipPix["Cable Machine"] = QPixmap::fromImage(cabMachine.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Cable Machine"] = QPixmap::fromImage(cabMachine.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage cRaise(":/images/calf raise.jpg");
-    equipPix["Calf Raise Machine"] = QPixmap::fromImage(cRaise.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Calf Raise Machine"] = QPixmap::fromImage(cRaise.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage cBar(":/images/curl bar.jpg");
-    equipPix["Curl Bar"] = QPixmap::fromImage(cBar.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Curl Bar"] = QPixmap::fromImage(cBar.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage dBar(":/images/dip bar.jpg");
-    equipPix["Dip Bar"] = QPixmap::fromImage(dBar.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Dip Bar"] = QPixmap::fromImage(dBar.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage dBells(":/images/dumbbells.jpg");
-    equipPix["Dumbbells"] = QPixmap::fromImage(dBells.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Dumbbells"] = QPixmap::fromImage(dBells.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage hCurl(":/images/hamstring curl machine.jpg");
-    equipPix["Hamstring Curl Machine"] = QPixmap::fromImage(hCurl.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Hamstring Curl Machine"] = QPixmap::fromImage(hCurl.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage hAb(":/images/hip abductor machine.jpg");
-    equipPix["Hip Abductor Machine"] = QPixmap::fromImage(hAb.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Hip Abductor Machine"] = QPixmap::fromImage(hAb.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage hThrust(":/images/hip thrust machine.jpg");
-    equipPix["Hip Thrust Machine"] = QPixmap::fromImage(hThrust.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Hip Thrust Machine"] = QPixmap::fromImage(hThrust.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage lPull(":/images/lat-pulldown.jpg");
-    equipPix["Lat Pulldown Machine"] = QPixmap::fromImage(lPull.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Lat Pulldown Machine"] = QPixmap::fromImage(lPull.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage kBell(":/images/kettlebell.jpg");
-    equipPix["Kettlebells"] = QPixmap::fromImage(kBell.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Kettlebells"] = QPixmap::fromImage(kBell.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage pBar(":/images/pull up bar.jpg");
-    equipPix["Pull Up Bar"] = QPixmap::fromImage(pBar.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Pull Up Bar"] = QPixmap::fromImage(pBar.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage qExt(":/images/quad extension machine.jpg");
-    equipPix["Quad Extension Machine"] = QPixmap::fromImage(qExt.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Quad Extension Machine"] = QPixmap::fromImage(qExt.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
     QImage rack(":/images/squat rack.jpg");
-    equipPix["Squat Rack"] = QPixmap::fromImage(rack.scaled(size, size, Qt::KeepAspectRatio));
+    equipPix["Squat Rack"] = QPixmap::fromImage(rack.scaled(SIZE, SIZE, Qt::KeepAspectRatio));
 }
 
 MdiChild::MdiChild() {
@@ -79,12 +79,12 @@ MdiChild::MdiChild() {
     mainLayout->addLayout(editRoutineButtonLayout);
 
     // Button to add an exercise
-    buttonAddExercise = new QPushButton("Add");
+    buttonAddExercise = new QPushButton("Add Exercise");
     editRoutineButtonLayout->addWidget(buttonAddExercise);
     connect(buttonAddExercise, &QPushButton::clicked, this, &MdiChild::buttonAddExerciseClicked);
 
     // Button to remove an exercise
-    buttonRemoveExercise = new QPushButton("Remove");
+    buttonRemoveExercise = new QPushButton("Remove Exercise");
     editRoutineButtonLayout->addWidget(buttonRemoveExercise);
     connect(buttonRemoveExercise, &QPushButton::clicked, this, &MdiChild::buttonRemoveExerciseClicked);
 
@@ -95,7 +95,7 @@ MdiChild::MdiChild() {
     routineLayout->addWidget(routineListWidget);
     mainLayout->addLayout(routineLayout);
 
-    // Button print the routine
+    // Button to print the routine
     buttonPrintRoutine = new QPushButton("Print");
     routineLayout->addWidget(buttonPrintRoutine);
     connect(buttonPrintRoutine, &QPushButton::clicked, this, &MdiChild::buttonPrintRoutineClicked);
@@ -116,12 +116,12 @@ MdiChild::MdiChild() {
         // Exercise Name
         exerciseItem->setText(0, exercise._name);
 
-        //Primary Muscle Group
+        // Primary Muscle Group
         if (MuscleEncoding::decodeMuscleGroup(exercise._primary).isEmpty()) {
             QMessageBox::warning(this, tr("Workout Planner"), "File read incorrectly, primary muscle group is empty for an exercise");
         } else exerciseItem->setText(1, MuscleEncoding::decodeMuscleGroup(exercise._primary)[0]);
 
-        //Secondary Muscle Group
+        // Secondary Muscle Group
         exerciseItem->setText(2, MuscleEncoding::decodeMuscleGroup(exercise._secondary).join(",  "));
 
         // Equipments Used
@@ -163,7 +163,7 @@ void MdiChild::exerciseSelectedItemChanged(QTreeWidgetItem *current, QTreeWidget
             delete child;
         }
 
-        // Displays the picture for the equipment
+        // Displays the picture of the equipment
         for (auto equipment = equipPix.begin(); equipment != equipPix.end(); ++equipment) {
             if (thisEquipment.contains(equipment.key())) {
                 qDebug()<<equipment.key();
@@ -305,7 +305,7 @@ void MdiChild::buttonRemoveExerciseClicked() {
 void MdiChild::newFile() {
     static int sequenceNumber = 1;
     isUntitled = true;
-    curFile = tr("document%1.txt").arg(sequenceNumber++);
+    curFile = tr("workout_plan%1.txt").arg(sequenceNumber++);
     setWindowTitle(curFile + "[*]");
 }
 

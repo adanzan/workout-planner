@@ -8,7 +8,6 @@ class MyTreeWidget : public QTreeWidget {
 Q_OBJECT
 protected:
     void keyPressEvent(QKeyEvent *event) override;
-
 public:
     MyTreeWidget();
 signals:

@@ -274,7 +274,7 @@ void MainWindow::createActions() {
     const QIcon openIcon = QIcon::fromTheme("document-open", QIcon(":/images/open.png"));
     QAction *openAct = new QAction(openIcon, tr("&Open..."), this);
     openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Open an existing file"));
+    openAct->setStatusTip(tr("Open an existing workout plan"));
     connect(openAct, &QAction::triggered, this, &MainWindow::open);
     fileMenu->addAction(openAct);
     fileToolBar->addAction(openAct);
@@ -282,14 +282,14 @@ void MainWindow::createActions() {
     const QIcon saveIcon = QIcon::fromTheme("document-save", QIcon(":/images/save.png"));
     saveAct = new QAction(saveIcon, tr("&Save"), this);
     saveAct->setShortcuts(QKeySequence::Save);
-    saveAct->setStatusTip(tr("Save the document to disk"));
+    saveAct->setStatusTip(tr("Save the workout plan to disk"));
     connect(saveAct, &QAction::triggered, this, &MainWindow::save);
     fileToolBar->addAction(saveAct);
 
     const QIcon saveAsIcon = QIcon::fromTheme("document-save-as");
     saveAsAct = new QAction(saveAsIcon, tr("Save &As..."), this);
     saveAsAct->setShortcuts(QKeySequence::SaveAs);
-    saveAsAct->setStatusTip(tr("Save the document under a new name"));
+    saveAsAct->setStatusTip(tr("Save the workout plan under a new name"));
     connect(saveAsAct, &QAction::triggered, this, &MainWindow::saveAs);
     fileMenu->addAction(saveAsAct);
 
