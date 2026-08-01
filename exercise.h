@@ -3,6 +3,7 @@
 #define EXERCISE_H
 
 #include <QStringList>
+#include <list>
 
 class Exercise {
 public:

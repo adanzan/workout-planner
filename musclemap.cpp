@@ -6,6 +6,7 @@
 #include <QtWidgets>
 #include <QtXml>
 #include <QFile>
+#include <QRegularExpression>
 
 void MuscleMap::setUnselectedColor(QColor color) { unselectedColor = color; }
 void MuscleMap::setSelectedColor(QColor color) { selectedColor = color; }
@@ -50,9 +51,9 @@ MuscleMap::MuscleMap() {
 
     QDomElement elt = root.firstChildElement();
     if (elt.tagName()=="style") {
-        QStringList styleList = elt.text().split(QRegExp("\\s+"), Qt::SkipEmptyParts);
+        QStringList styleList = elt.text().split(QRegularExpression("\\s+"), Qt::SkipEmptyParts);
         foreach (QString s, styleList) {
-            QStringList styleDef = s.split(QRegExp("[\\{\\}]"), Qt::SkipEmptyParts);
+            QStringList styleDef = s.split(QRegularExpression("[\\{\\}]"), Qt::SkipEmptyParts);
             if (styleDef.length()!=2) continue;
             QString styleName = styleDef[0].mid(1);
             QStringList props = styleDef[1].split(";", Qt::SkipEmptyParts);
@@ -125,7 +126,7 @@ MuscleMap::MuscleMap() {
                     QString pathClass = groupElement.attribute("class", "");
                     QString d = groupElement.attribute("d", "").simplified();
                     d.replace(" ", "");
-                    d.replace(QRegExp("([0-9])-"), "\\1,-");
+                    d.replace(QRegularExpression("([0-9])-"), "\\1,-");
                     if (!d.isEmpty() && svgClasses.find(pathClass)!=svgClasses.end()) {
                         QPainterPath path;
                         QTextStream in(&d);

@@ -3,7 +3,7 @@
 #ifndef MUSCLEENCODING_H
 #define MUSCLEENCODING_H
 
-class QStringList;
+#include <QStringList>
 
 class MuscleEncoding {
 public:
